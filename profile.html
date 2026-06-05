@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Προφίλ — TechStore</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #111827;
+      --bg-card: #141d2e;
+      --accent-blue: #0078ff;
+      --accent-cyan: #00c8ff;
+      --accent-hover: #005ecc;
+      --border-subtle: #1e3d6b;
+      --text-primary: #e8edf5;
+      --text-muted: #8a9bbf;
+      --price-color: #00c8ff;
+      --danger: #e53e3e;
+      --success: #48bb78;
+    }
+
+    body { background-color: var(--bg-primary); color: var(--text-primary); }
+
+    /* Navbar */
+    .navbar { background-color: var(--bg-secondary); border-bottom: 2px solid var(--accent-blue); box-shadow: 0 2px 20px rgba(0,120,255,.15); }
+    .navbar-brand img { height: 80px; }
+    .nav-link { color: var(--text-muted) !important; transition: color .2s; }
+    .nav-link:hover, .nav-link.active { color: var(--accent-cyan) !important; }
+    .dropdown-menu { background-color: var(--bg-secondary); border: 1px solid var(--border-subtle); }
+    .dropdown-item { color: var(--text-muted); }
+    .dropdown-item:hover { background-color: rgba(0,120,255,.15); color: var(--accent-cyan); }
+
+    .breadcrumb { background: transparent; margin: 0; padding: 0; }
+    .breadcrumb-item a { color: var(--accent-blue); text-decoration: none; }
+    .breadcrumb-item a:hover { color: var(--accent-cyan); }
+    .breadcrumb-item.active { color: var(--text-muted); }
+    .breadcrumb-item + .breadcrumb-item::before { color: var(--border-subtle); }
+
+    /* ── Avatar card ── */
+    .avatar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      width: 96px;
+      margin: 0 auto 16px;
+    }
+
+    .avatar-img {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent-blue);
+      box-shadow: 0 0 0 4px rgba(0,120,255,.15);
+    }
+
+    .avatar-edit {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 26px;
+      height: 26px;
+      background: var(--accent-blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: #fff;
+      cursor: pointer;
+      border: 2px solid var(--bg-card);
+    }
+
+    .user-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 3px; }
+    .user-email { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px; }
+
+    .member-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(0,120,255,.2), rgba(0,200,255,.15));
+      border: 1px solid rgba(0,200,255,.3);
+      color: var(--accent-cyan);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.4px;
+      margin-bottom: 20px;
+    }
+
+    /* ── Stats ── */
+    .stat-row { display: flex; justify-content: space-around; border-top: 1px solid var(--border-subtle); padding-top: 16px; margin-top: 4px; }
+    .stat-item { text-align: center; }
+    .stat-num { font-size: 1.3rem; font-weight: 700; color: var(--accent-cyan); }
+    .stat-lbl { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── Sidebar nav ── */
+    .side-nav { margin-top: 16px; }
+    .side-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all .2s;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+    }
+    .side-nav-item i { width: 16px; text-align: center; color: var(--accent-blue); }
+    .side-nav-item:hover { background: rgba(0,120,255,.08); color: var(--text-primary); }
+    .side-nav-item.active { background: rgba(0,120,255,.15); color: var(--accent-cyan); border-left: 3px solid var(--accent-cyan); }
+
+    .btn-logout {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 8px;
+      color: var(--danger); font-size: 0.88rem;
+      cursor: pointer; border: 1px solid rgba(229,62,62,.25);
+      background: rgba(229,62,62,.07); width: 100%;
+      margin-top: 10px; transition: all .2s;
+    }
+    .btn-logout:hover { background: rgba(229,62,62,.15); border-color: var(--danger); }
+
+    /* ── Content panel ── */
+    .content-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 28px;
+    }
+
+    .panel-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .panel-title i { color: var(--accent-blue); }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* ── Orders table ── */
+    .orders-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .orders-table th {
+      color: var(--text-muted); font-weight: 600; font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: .7px;
+      padding: 10px 14px; border-bottom: 1px solid var(--border-subtle);
+      text-align: left;
+    }
+    .orders-table td { padding: 14px; border-bottom: 1px solid rgba(30,61,107,.4); vertical-align: middle; }
+    .orders-table tbody tr.order-row { cursor: pointer; transition: background .15s; }
+    .orders-table tbody tr.order-row:hover { background: rgba(255,255,255,.025); }
+    .orders-table tbody tr:last-child td { border-bottom: none; }
+
+    .order-id { color: var(--accent-cyan); font-weight: 600; font-family: monospace; }
+    .order-date { color: var(--text-muted); }
+
+    .status-badge {
+      display: inline-block; font-size: 0.72rem; font-weight: 700;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .status-delivered { background: rgba(72,187,120,.15); color: #48bb78; border: 1px solid rgba(72,187,120,.3); }
+    .status-processing { background: rgba(246,173,16,.15); color: #f6ad10; border: 1px solid rgba(246,173,16,.3); }
+    .status-shipped { background: rgba(0,200,255,.15); color: var(--accent-cyan); border: 1px solid rgba(0,200,255,.3); }
+    .status-canceled { background: rgba(229,62,62,.15); color: var(--danger); border: 1px solid rgba(229,62,62,.3); }
+    .status-returned { background: rgba(138,155,191,.15); color: var(--text-muted); border: 1px solid rgba(138,155,191,.3); }
+
+    .order-toggle { color: var(--text-muted); transition: transform .2s; display: inline-block; }
+    .order-toggle.open { transform: rotate(180deg); color: var(--accent-cyan); }
+
+    .order-detail-row { display: none; }
+    .order-detail-row td { background: rgba(0,0,0,.2); padding: 16px 20px; }
+
+    .order-detail-product {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 0; border-bottom: 1px solid rgba(30,61,107,.3);
+    }
+    .order-detail-product:last-child { border-bottom: none; }
+    .order-detail-product img { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-subtle); }
+    .order-detail-product .prod-name { font-size: 0.88rem; color: var(--text-primary); }
+    .order-detail-product .prod-price { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* ── Wishlist ── */
+    .wishlist-item {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px; background: var(--bg-primary);
+      border: 1px solid var(--border-subtle); border-radius: 10px;
+      margin-bottom: 10px; transition: border-color .2s;
+    }
+    .wishlist-item:hover { border-color: var(--accent-blue); }
+    .wishlist-item img { width: 68px; height: 68px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+    .wishlist-item .wi-name { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 3px; }
+    .wishlist-item .wi-cat { font-size: 0.72rem; color: var(--accent-cyan); }
+    .wishlist-item .wi-price { color: var(--price-color); font-weight: 700; font-size: 0.95rem; }
+    .wishlist-item .wi-actions { margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; }
+
+    .btn-add-cart {
+      background: var(--accent-blue); border: none; color: #fff;
+      font-size: 0.8rem; padding: 7px 14px; border-radius: 7px;
+      cursor: pointer; font-weight: 600; transition: background .2s;
+      white-space: nowrap;
+    }
+    .btn-add-cart:hover { background: var(--accent-hover); }
+    .btn-remove-wish {
+      background: rgba(229,62,62,.1); border: 1px solid rgba(229,62,62,.25);
+      color: var(--danger); width: 34px; height: 34px; border-radius: 7px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; transition: all .2s;
+    }
+    .btn-remove-wish:hover { background: rgba(229,62,62,.2); }
+
+    /* ── Settings form ── */
+    .form-label { color: var(--text-muted); font-size: 0.83rem; font-weight: 500; margin-bottom: 5px; }
+    .form-control, .form-select {
+      background-color: var(--bg-primary); border: 1px solid var(--border-subtle);
+      border-radius: 8px; color: var(--text-primary); padding: 9px 13px; font-size: 0.88rem;
+    }
+    .form-control:focus, .form-select:focus {
+      background-color: var(--bg-primary); border-color: var(--accent-blue);
+      color: var(--text-primary); box-shadow: 0 0 0 3px rgba(0,120,255,.2);
+    }
+    .form-control::placeholder { color: var(--text-muted); }
+    .form-select option { background: var(--bg-secondary); }
+    .form-check-input { accent-color: var(--accent-blue); }
+    .form-check-label { color: var(--text-muted); font-size: 0.88rem; }
+
+    .section-divider {
+      font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .8px; color: var(--text-muted); margin: 22px 0 14px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border-subtle);
+    }
+
+    .btn-save {
+      background: var(--accent-blue); border: none; color: #fff;
+      font-weight: 600; padding: 10px 28px; border-radius: 8px;
+      font-size: 0.9rem; cursor: pointer; transition: background .2s, box-shadow .2s;
+    }
+    .btn-save:hover { background: var(--accent-hover); box-shadow: 0 4px 15px rgba(0,120,255,.4); }
+
+    .save-ok { display: none; font-size: 0.82rem; color: var(--success); margin-top: 8px; }
+
+    /* ── Footer ── */
+    footer { background-color: var(--bg-secondary); color: var(--text-muted); padding: 20px 0; margin-top: 60px; border-top: 1px solid var(--border-subtle); }
+    footer h5 { color: var(--text-primary); font-weight: 600; }
+    footer a { color: var(--accent-blue); text-decoration: none; }
+    footer a:hover { color: var(--accent-cyan); }
+    footer hr { border-color: var(--border-subtle); }
+    .social-icons a { color: var(--text-muted); margin: 0 10px; font-size: 1.5rem; transition: color .2s; }
+    .social-icons a:hover { color: var(--accent-cyan); }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><img src="https://placehold.co/80x80" alt="TechStore"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-home"></i> Home</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="fas fa-store"></i> Shop</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="shop.html">All Products</a></li>
+              <li><a class="dropdown-item" href="shop.html">Electronics</a></li>
+              <li><a class="dropdown-item" href="shop.html">Accessories</a></li>
+              <li><a class="dropdown-item" href="shop.html">Gaming</a></li>
+              <li><a class="dropdown-item" href="shop.html">Smart Home</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+          <li class="nav-item"><a class="nav-link active" href="profile.html"><i class="fas fa-user"></i> Profile</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-3 mb-2">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item active">Προφίλ</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="container mt-4 mb-5">
+    <div class="row g-4">
+
+      <!-- ── Sidebar ── -->
+      <div class="col-lg-3">
+
+        <div class="avatar-card">
+          <div class="avatar-wrap">
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&crop=face" class="avatar-img" alt="Avatar">
+            <div class="avatar-edit" title="Αλλαγή φωτογραφίας"><i class="fas fa-camera"></i></div>
+          </div>
+          <div class="user-name">Γιώργος Αλεξανδρόπουλος</div>
+          <div class="user-email">g.alexandropoulos@email.com</div>
+          <div class="member-badge"><i class="fas fa-star me-1"></i>Premium Member</div>
+          <div class="stat-row">
+            <div class="stat-item"><div class="stat-num">5</div><div class="stat-lbl">Παραγγελίες</div></div>
+            <div class="stat-item"><div class="stat-num">3</div><div class="stat-lbl">Wishlist</div></div>
+            <div class="stat-item"><div class="stat-num">€2.1k</div><div class="stat-lbl">Δαπάνη</div></div>
+          </div>
+        </div>
+
+        <div class="side-nav mt-3">
+          <button class="side-nav-item active" onclick="showTab('orders', this)">
+            <i class="fas fa-box"></i> Παραγγελίες
+          </button>
+          <button class="side-nav-item" onclick="showTab('wishlist', this)">
+            <i class="far fa-heart"></i> Wishlist
+          </button>
+          <button class="side-nav-item" onclick="showTab('settings', this)">
+            <i class="fas fa-cog"></i> Ρυθμίσεις
+          </button>
+          <button class="side-nav-item" onclick="showTab('addresses', this)">
+            <i class="fas fa-map-marker-alt"></i> Διευθύνσεις
+          </button>
+          <button class="btn-logout">
+            <i class="fas fa-sign-out-alt"></i> Αποσύνδεση
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ── Content ── -->
+      <div class="col-lg-9">
+
+        <!-- Orders -->
+        <div class="content-panel tab-pane active" id="tab-orders">
+          <div class="panel-title"><i class="fas fa-box"></i> Ιστορικό Παραγγελιών</div>
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Παραγγελία</th>
+                <th>Ημερομηνία</th>
+                <th>Κατάσταση</th>
+                <th>Σύνολο</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr class="order-row" onclick="toggleOrder(1001)">
+                <td><span class="order-id">#TS-1001</span></td>
+                <td class="order-date">15 Ιαν 2025</td>
+                <td><span class="status-badge status-delivered">Παραδόθηκε</span></td>
+                <td style="color:var(--price-color);font-weight:700">€1.707</td>
+                <td><i class="fas fa-chevron-down order-toggle" id="toggle-1001"></i></td>
+              </tr>
+              <tr class="order-detail-row" id="order-1001">
+                <td colspan="5">
+                  <div class="order-detail-product">
+                    <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=100&h=100&fit=crop&crop=center" alt="Sony">
+                    <div><div class="prod-name">Sony WH-1000XM5</div><div class="prod-price">×1 — €319</div></div>
+                  </div>
+                  <div class="order-detail-product">
+                    <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=100&h=100&fit=crop&crop=center" alt="MacBook">
+                    <div><div class="prod-name">Apple MacBook Air M3</div><div class="prod-price">×1 — €1.299</div></div>
+                  </div>
+                  <div class="d-flex gap-4 mt-3" style="font-size:.84rem;color:var(--text-muted)">
+                    <span>Υποσύνολο: <strong style="color:var(--text-primary)">€1.618</strong></span>
+                    <span>ΦΠΑ: <strong style="color:var(--text-primary)">€389</strong></span>
+                    <span>Αποστολή: <strong style="color:#48bb78">Δωρεάν</strong></span>
+                    <span>Σύνολο: <strong style="color:var(--price-color)">€2.007</strong></span>
+                  </div>
+                </td>
+              </tr>
+
+              <tr class="order-row" onclick="toggleOrder(1002)">
+                <td><span class="order-id">#TS-1002</span></td>
+                <td class="order-date">2 Μαρ 2025</td>
+                <td><span class="status-badge status-shipped">Εστάλη</span></td>
+                <td style="color:var(--price-color);font-weight:700">€449</td>
+                <td><i class="fas fa-chevron-down order-toggle" id="toggle-1002"></i></td>
+              </tr>
+              <tr class="order-detail-row" id="order-1002">
+                <td colspan="5">
+                  <div class="order-detail-product">
+                    <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=100&h=100&fit=crop&crop=center" alt="LG Monitor">
+                    <div><div class="prod-name">LG 27" 4K IPS Monitor</div><div class="prod-price">×1 — €449</div></div>
+                  </div>
+                  <div class="d-flex gap-4 mt-3" style="font-size:.84rem;color:var(--text-muted)">
+                    <span>Υποσύνολο: <strong style="color:var(--text-primary)">€449</strong></span>
+                    <span>ΦΠΑ: <strong style="color:var(--text-primary)">€108</strong></span>
+                    <span>Σύνολο: <strong style="color:var(--price-color)">€557</strong></span>
+                  </div>
+                </td>
+              </tr>
+
+              <tr class="order-row" onclick="toggleOrder(1003)">
+                <td><span class="order-id">#TS-1003</span></td>
+                <td class="order-date">10 Μαΐ 2025</td>
+                <td><span class="status-badge status-processing">Σε επεξεργασία</span></td>
+                <td style="color:var(--price-color);font-weight:700">€1.199</td>
+                <td><i class="fas fa-chevron-down order-toggle" id="toggle-1003"></i></td>
+              </tr>
+              <tr class="order-detail-row" id="order-1003">
+                <td colspan="5">
+                  <div class="order-detail-product">
+                    <img src="https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=100&h=100&fit=crop&crop=center" alt="Samsung">
+                    <div><div class="prod-name">Samsung Galaxy S24 Ultra</div><div class="prod-price">×1 — €1.199</div></div>
+                  </div>
+                  <div class="d-flex gap-4 mt-3" style="font-size:.84rem;color:var(--text-muted)">
+                    <span>Υποσύνολο: <strong style="color:var(--text-primary)">€1.199</strong></span>
+                    <span>ΦΠΑ: <strong style="color:var(--text-primary)">€288</strong></span>
+                    <span>Σύνολο: <strong style="color:var(--price-color)">€1.487</strong></span>
+                  </div>
+                </td>
+              </tr>
+
+              <tr class="order-row" onclick="toggleOrder(1004)">
+                <td><span class="order-id">#TS-1004</span></td>
+                <td class="order-date">20 Απρ 2025</td>
+                <td><span class="status-badge status-canceled">Ακυρώθηκε</span></td>
+                <td style="color:var(--text-muted)">€89</td>
+                <td><i class="fas fa-chevron-down order-toggle" id="toggle-1004"></i></td>
+              </tr>
+              <tr class="order-detail-row" id="order-1004">
+                <td colspan="5">
+                  <div class="order-detail-product">
+                    <img src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=100&h=100&fit=crop&crop=center" alt="Logitech">
+                    <div><div class="prod-name">Logitech MX Master 3S</div><div class="prod-price">×1 — €89</div></div>
+                  </div>
+                  <div class="mt-2" style="font-size:.82rem;color:var(--danger)"><i class="fas fa-info-circle me-1"></i>Η παραγγελία ακυρώθηκε από τον χρήστη.</div>
+                </td>
+              </tr>
+
+              <tr class="order-row" onclick="toggleOrder(1005)">
+                <td><span class="order-id">#TS-1005</span></td>
+                <td class="order-date">1 Ιουν 2025</td>
+                <td><span class="status-badge status-returned">Επεστράφη</span></td>
+                <td style="color:var(--text-muted)">€449</td>
+                <td><i class="fas fa-chevron-down order-toggle" id="toggle-1005"></i></td>
+              </tr>
+              <tr class="order-detail-row" id="order-1005">
+                <td colspan="5">
+                  <div class="order-detail-product">
+                    <img src="https://images.unsplash.com/photo-1486401899868-0e435ed85128?w=100&h=100&fit=crop&crop=center" alt="PS5">
+                    <div><div class="prod-name">PlayStation 5 Slim</div><div class="prod-price">×1 — €449</div></div>
+                  </div>
+                  <div class="mt-2" style="font-size:.82rem;color:var(--text-muted)"><i class="fas fa-undo me-1"></i>Επιστροφή εγκρίθηκε — Η επιστροφή χρημάτων σε εξέλιξη.</div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Wishlist -->
+        <div class="content-panel tab-pane" id="tab-wishlist">
+          <div class="panel-title"><i class="far fa-heart"></i> Wishlist</div>
+
+          <div class="wishlist-item" id="wi-1">
+            <img src="https://images.unsplash.com/photo-1486401899868-0e435ed85128?w=140&h=140&fit=crop&crop=center" alt="PS5">
+            <div>
+              <div class="wi-name">PlayStation 5 Slim</div>
+              <div class="wi-cat">Gaming</div>
+              <div class="wi-price mt-1">€449</div>
+            </div>
+            <div class="wi-actions">
+              <button class="btn-add-cart" onclick="window.location='cart.html'"><i class="fas fa-shopping-cart me-1"></i>Στο Καλάθι</button>
+              <button class="btn-remove-wish" onclick="removeWish('wi-1')"><i class="fas fa-trash-alt"></i></button>
+            </div>
+          </div>
+
+          <div class="wishlist-item" id="wi-2">
+            <img src="https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=140&h=140&fit=crop&crop=center" alt="Samsung">
+            <div>
+              <div class="wi-name">Samsung Galaxy S24 Ultra</div>
+              <div class="wi-cat">Smartphones</div>
+              <div class="wi-price mt-1">€1.199</div>
+            </div>
+            <div class="wi-actions">
+              <button class="btn-add-cart" onclick="window.location='cart.html'"><i class="fas fa-shopping-cart me-1"></i>Στο Καλάθι</button>
+              <button class="btn-remove-wish" onclick="removeWish('wi-2')"><i class="fas fa-trash-alt"></i></button>
+            </div>
+          </div>
+
+          <div class="wishlist-item" id="wi-3">
+            <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=140&h=140&fit=crop&crop=center" alt="LG Monitor">
+            <div>
+              <div class="wi-name">LG 27" 4K IPS Monitor</div>
+              <div class="wi-cat">Monitors</div>
+              <div class="wi-price mt-1">€449</div>
+            </div>
+            <div class="wi-actions">
+              <button class="btn-add-cart" onclick="window.location='cart.html'"><i class="fas fa-shopping-cart me-1"></i>Στο Καλάθι</button>
+              <button class="btn-remove-wish" onclick="removeWish('wi-3')"><i class="fas fa-trash-alt"></i></button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Settings -->
+        <div class="content-panel tab-pane" id="tab-settings">
+          <div class="panel-title"><i class="fas fa-cog"></i> Ρυθμίσεις Λογαριασμού</div>
+          <form id="settingsForm" onsubmit="saveSettings(event)">
+
+            <div class="section-divider">Προσωπικά Στοιχεία</div>
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label class="form-label">Όνομα</label>
+                <input type="text" class="form-control" value="Γιώργος">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Επώνυμο</label>
+                <input type="text" class="form-control" value="Αλεξανδρόπουλος">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" value="g.alexandropoulos@email.com">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Τηλέφωνο</label>
+                <input type="tel" class="form-control" value="+30 697 123 4567">
+              </div>
+            </div>
+
+            <div class="section-divider">Αλλαγή Κωδικού</div>
+            <div class="row g-3">
+              <div class="col-sm-4">
+                <label class="form-label">Τρέχων κωδικός</label>
+                <input type="password" class="form-control" placeholder="••••••••">
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label">Νέος κωδικός</label>
+                <input type="password" class="form-control" placeholder="••••••••">
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label">Επιβεβαίωση</label>
+                <input type="password" class="form-control" placeholder="••••••••">
+              </div>
+            </div>
+
+            <div class="section-divider">Ειδοποιήσεις</div>
+            <div class="row g-2">
+              <div class="col-12"><div class="form-check"><input class="form-check-input" type="checkbox" id="notif1" checked><label class="form-check-label" for="notif1">Email ειδοποιήσεις για παραγγελίες</label></div></div>
+              <div class="col-12"><div class="form-check"><input class="form-check-input" type="checkbox" id="notif2" checked><label class="form-check-label" for="notif2">SMS ειδοποιήσεις αποστολής</label></div></div>
+              <div class="col-12"><div class="form-check"><input class="form-check-input" type="checkbox" id="notif3"><label class="form-check-label" for="notif3">Newsletter & προσφορές</label></div></div>
+            </div>
+
+            <div class="mt-4 d-flex align-items-center gap-3">
+              <button type="submit" class="btn-save"><i class="fas fa-save me-2"></i>Αποθήκευση</button>
+              <div class="save-ok" id="saveOk"><i class="fas fa-check-circle me-1"></i>Οι αλλαγές αποθηκεύτηκαν!</div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Addresses -->
+        <div class="content-panel tab-pane" id="tab-addresses">
+          <div class="panel-title"><i class="fas fa-map-marker-alt"></i> Διευθύνσεις</div>
+          <form id="addressForm" onsubmit="saveAddress(event)">
+
+            <div class="section-divider">Διεύθυνση Αποστολής</div>
+            <div class="row g-3">
+              <div class="col-sm-8">
+                <label class="form-label">Οδός & Αριθμός</label>
+                <input type="text" class="form-control" id="ship-street" placeholder="π.χ. Λεωφ. Κηφισίας 24">
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label">Τ.Κ.</label>
+                <input type="text" class="form-control" id="ship-postal" placeholder="115 26">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Πόλη</label>
+                <input type="text" class="form-control" id="ship-city" placeholder="Αθήνα">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Χώρα</label>
+                <select class="form-select" id="ship-country">
+                  <option selected>Ελλάδα</option>
+                  <option>Κύπρος</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="section-divider">Διεύθυνση Τιμολόγησης</div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="same-address" onchange="copyAddress(this)">
+              <label class="form-check-label" for="same-address">Ίδια με τη διεύθυνση αποστολής</label>
+            </div>
+            <div id="billingFields">
+              <div class="row g-3">
+                <div class="col-sm-8">
+                  <label class="form-label">Οδός & Αριθμός</label>
+                  <input type="text" class="form-control" id="bill-street" placeholder="π.χ. Πατησίων 10">
+                </div>
+                <div class="col-sm-4">
+                  <label class="form-label">Τ.Κ.</label>
+                  <input type="text" class="form-control" id="bill-postal" placeholder="106 77">
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label">Πόλη</label>
+                  <input type="text" class="form-control" id="bill-city" placeholder="Αθήνα">
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label">Χώρα</label>
+                  <select class="form-select" id="bill-country">
+                    <option selected>Ελλάδα</option>
+                    <option>Κύπρος</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4 d-flex align-items-center gap-3">
+              <button type="submit" class="btn-save"><i class="fas fa-save me-2"></i>Αποθήκευση</button>
+              <div class="save-ok" id="addrOk"><i class="fas fa-check-circle me-1"></i>Διεύθυνση αποθηκεύτηκε!</div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 mb-3"><h5>Quick Links</h5><ul class="list-unstyled"><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="contact.html">Contact</a></li><li><a href="cart.html">Cart</a></li><li><a href="terms.html">Terms & Conditions</a></li></ul></div>
+        <div class="col-md-3 mb-3"><h5>Follow Us</h5><div class="social-icons"><a href="#"><i class="fab fa-facebook"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-linkedin"></i></a></div></div>
+        <div class="col-md-3 mb-3"><h5>Contact Info</h5><p>Email: support@techstore.gr</p><p>Phone: +30 210 123 4567</p><p>Αθήνα, Ελλάδα</p></div>
+        <div class="col-md-3 mb-3"><h5>Newsletter</h5><form id="newsletter-form"><div class="input-group"><input type="email" id="newsletter-email" class="form-control" placeholder="Το email σου" required><button type="submit" class="btn btn-primary">OK</button></div><p id="newsletter-message" class="mt-2 text-success" style="display:none">Ευχαριστούμε!</p></form></div>
+      </div>
+      <hr><p class="mb-0">&copy; 2025 TechStore. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function showTab(name, btn) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.side-nav-item').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+      if (btn) btn.classList.add('active');
+    }
+
+    function toggleOrder(id) {
+      const row = document.getElementById('order-' + id);
+      const toggle = document.getElementById('toggle-' + id);
+      const isOpen = row.style.display === 'table-row';
+      row.style.display = isOpen ? 'none' : 'table-row';
+      toggle.classList.toggle('open', !isOpen);
+    }
+
+    function removeWish(id) {
+      const el = document.getElementById(id);
+      el.style.transition = 'opacity .3s, transform .3s';
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(20px)';
+      setTimeout(() => el.remove(), 300);
+    }
+
+    function saveSettings(e) {
+      e.preventDefault();
+      const ok = document.getElementById('saveOk');
+      ok.style.display = 'inline';
+      setTimeout(() => ok.style.display = 'none', 3000);
+    }
+
+    function saveAddress(e) {
+      e.preventDefault();
+      const ok = document.getElementById('addrOk');
+      ok.style.display = 'inline';
+      setTimeout(() => ok.style.display = 'none', 3000);
+    }
+
+    function copyAddress(cb) {
+      const fields = ['street', 'postal', 'city'];
+      if (cb.checked) {
+        fields.forEach(f => {
+          document.getElementById('bill-' + f).value = document.getElementById('ship-' + f).value;
+        });
+        document.getElementById('bill-country').value = document.getElementById('ship-country').value;
+        document.getElementById('billingFields').style.opacity = '.5';
+        document.getElementById('billingFields').style.pointerEvents = 'none';
+      } else {
+        document.getElementById('billingFields').style.opacity = '1';
+        document.getElementById('billingFields').style.pointerEvents = '';
+      }
+    }
+
+    document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (document.getElementById('newsletter-email').value) {
+        document.getElementById('newsletter-message').style.display = 'block';
+        document.getElementById('newsletter-email').value = '';
+      }
+    });
+  </script>
+</body>
+</html>

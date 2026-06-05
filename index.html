@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Listing</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #111827;
+      --bg-card: #141d2e;
+      --accent-blue: #0078ff;
+      --accent-cyan: #00c8ff;
+      --accent-hover: #005ecc;
+      --border-subtle: #1e3d6b;
+      --text-primary: #e8edf5;
+      --text-muted: #8a9bbf;
+      --price-color: #00c8ff;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    .navbar {
+      background-color: var(--bg-secondary);
+      border-bottom: 2px solid var(--accent-blue);
+      box-shadow: 0 2px 20px rgba(0, 120, 255, 0.15);
+    }
+
+    .navbar-brand img {
+      height: 80px;
+    }
+
+    .nav-link {
+      color: var(--text-muted) !important;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--accent-cyan) !important;
+    }
+
+    .dropdown-menu {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .dropdown-item {
+      color: var(--text-muted);
+    }
+
+    .dropdown-item:hover {
+      background-color: rgba(0, 120, 255, 0.15);
+      color: var(--accent-cyan);
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0, 120, 255, 0.25);
+      border-color: var(--accent-blue);
+    }
+
+    .card-title {
+      color: var(--text-primary);
+    }
+
+    .card-text {
+      color: var(--text-muted);
+    }
+
+    .card-text strong {
+      color: var(--price-color);
+      font-size: 1.1rem;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-blue);
+      border-color: var(--accent-blue);
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+      border-color: var(--accent-hover);
+      box-shadow: 0 4px 15px rgba(0, 120, 255, 0.4);
+    }
+
+    .cart-icon {
+      font-size: 1.5rem;
+      color: #fff;
+    }
+
+    h1.text-center {
+      color: var(--text-primary);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    h1.text-center::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+      margin: 10px auto 0;
+      border-radius: 2px;
+    }
+
+    .hero-video-wrap {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      overflow: hidden;
+      background: #05080f;
+    }
+
+    .hero-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        rgba(5, 12, 30, 0.82) 0%,
+        rgba(5, 12, 30, 0.45) 60%,
+        rgba(5, 12, 30, 0.2) 100%
+      );
+    }
+
+    .carousel-caption {
+      bottom: 15%;
+      text-align: left;
+      max-width: 520px;
+      left: 8%;
+      right: auto;
+      padding: 28px 32px;
+      background: linear-gradient(135deg, rgba(10,14,26,0.75) 0%, rgba(0,80,180,0.25) 100%);
+      border-radius: 12px;
+      border-left: 4px solid var(--accent-cyan);
+      backdrop-filter: blur(4px);
+    }
+
+    .carousel-caption h5 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .carousel-caption p {
+      font-size: 1rem;
+      color: #c8d8f0;
+      margin-bottom: 0;
+    }
+
+    footer {
+      background-color: var(--bg-secondary);
+      color: var(--text-muted);
+      padding: 20px 0;
+      margin-top: 40px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    footer h5 {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    footer a {
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: var(--accent-cyan);
+    }
+
+    footer hr {
+      border-color: var(--border-subtle);
+    }
+
+    .social-icons a {
+      color: var(--text-muted);
+      margin: 0 10px;
+      font-size: 1.5rem;
+      transition: color 0.2s;
+    }
+
+    .social-icons a:hover {
+      color: var(--accent-cyan);
+    }
+
+    .form-control {
+      background-color: var(--bg-primary);
+      border-color: var(--border-subtle);
+      color: var(--text-primary);
+    }
+
+    .form-control:focus {
+      background-color: var(--bg-primary);
+      border-color: var(--accent-blue);
+      color: var(--text-primary);
+      box-shadow: 0 0 0 3px rgba(0, 120, 255, 0.2);
+    }
+
+    .form-control::placeholder {
+      color: var(--text-muted);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .badge-new {
+      background-color: var(--accent-blue);
+      color: #fff;
+    }
+
+    .badge-sale {
+      background-color: #e53e3e;
+      color: #fff;
+    }
+
+    .badge-hot {
+      background-color: #d97706;
+      color: #fff;
+    }
+
+    .card-img-top {
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .card-img-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stars {
+      color: #f6ad10;
+      font-size: 0.85rem;
+    }
+
+    .stars span {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-left: 4px;
+    }
+
+    .price-old {
+      color: var(--text-muted);
+      text-decoration: line-through;
+      font-size: 0.9rem;
+      margin-right: 6px;
+    }
+
+    .price-new {
+      color: var(--price-color);
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .section-title {
+      color: var(--text-primary);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+      margin: 10px auto 0;
+      border-radius: 2px;
+    }
+
+    .category-pill {
+      display: inline-block;
+      font-size: 0.72rem;
+      color: var(--accent-cyan);
+      background: rgba(0, 200, 255, 0.1);
+      border: 1px solid rgba(0, 200, 255, 0.25);
+      border-radius: 20px;
+      padding: 2px 10px;
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="https://placehold.co/80x80" alt="My Store Logo"> <!-- Placeholder Logo -->
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html"><i class="fas fa-home"></i> Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active" href="#" id="shopDropdown" role="button"
+              data-bs-toggle="dropdown">
+              <i class="fas fa-store"></i> Shop
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="shop.html">All Products</a></li>
+              <li><a class="dropdown-item" href="shop.html">Electronics</a></li>
+              <li><a class="dropdown-item" href="shop.html">Accessories</a></li>
+              <li><a class="dropdown-item" href="shop.html">Gaming</a></li>
+              <li><a class="dropdown-item" href="shop.html">Smart Home</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="profile.html"><i class="fas fa-user"></i> Profile</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Video Hero Carousel -->
+  <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="8000">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+
+      <!-- Slide 1 — Laptops -->
+      <div class="carousel-item active">
+        <div class="hero-video-wrap">
+          <video class="hero-video" autoplay muted loop playsinline>
+            <source src="video1.mp4" type="video/mp4">
+          </video>
+          <div class="hero-overlay"></div>
+        </div>
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Laptops & Computers</h5>
+          <p>Τα πιο ισχυρά μηχανήματα για εργασία και δημιουργία. Δες τις καλύτερες τιμές.</p>
+          <a href="shop.html" class="btn btn-primary mt-2">Εξερεύνησε</a>
+        </div>
+      </div>
+
+      <!-- Slide 2 — Smartphones -->
+      <div class="carousel-item">
+        <div class="hero-video-wrap">
+          <video class="hero-video" muted loop playsinline>
+            <source src="video2.mp4" type="video/mp4">
+          </video>
+          <div class="hero-overlay"></div>
+        </div>
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Smartphones & Tablets</h5>
+          <p>Τελευταία μοντέλα Samsung, Apple και περισσότερα. Γρήγορη παράδοση σε όλη την Ελλάδα.</p>
+          <a href="shop.html" class="btn btn-primary mt-2">Δες Προσφορές</a>
+        </div>
+      </div>
+
+      <!-- Slide 3 — Gaming -->
+      <div class="carousel-item">
+        <div class="hero-video-wrap">
+          <video class="hero-video" muted loop playsinline>
+            <source src="video3.mp4" type="video/mp4">
+          </video>
+          <div class="hero-overlay"></div>
+        </div>
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Gaming Setup</h5>
+          <p>Consoles, peripherals και accessories για το τέλειο gaming setup. Ξεκίνα τώρα.</p>
+          <a href="shop.html" class="btn btn-primary mt-2">Shop Gaming</a>
+        </div>
+      </div>
+
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <!-- Product Listing -->
+  <div class="container mt-5">
+    <h1 class="text-center section-title mb-5">Προτεινόμενα Προϊόντα</h1>
+    <div class="row">
+
+      <!-- Sony WH-1000XM5 -->
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-img-wrapper">
+            <span class="product-badge badge-new">New</span>
+            <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=250&fit=crop&crop=center" class="card-img-top" alt="Sony WH-1000XM5">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <span class="category-pill">Ακουστικά</span>
+            <h5 class="card-title">Sony WH-1000XM5</h5>
+            <p class="card-text flex-grow-1">Ασύρματα ακουστικά με industry-leading noise cancellation, 30 ώρες μπαταρία και Hi-Res Audio.</p>
+            <div class="stars mb-2">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+              <span>(1.243)</span>
+            </div>
+            <p class="card-text mb-3">
+              <span class="price-old">€399</span>
+              <span class="price-new">€319</span>
+            </p>
+            <a href="product1.html" class="btn btn-primary mt-auto">Δες Λεπτομέρειες</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Apple MacBook Air M3 -->
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-img-wrapper">
+            <span class="product-badge badge-hot">Hot</span>
+            <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=250&fit=crop&crop=center" class="card-img-top" alt="Apple MacBook Air M3">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <span class="category-pill">Laptops</span>
+            <h5 class="card-title">Apple MacBook Air M3</h5>
+            <p class="card-text flex-grow-1">Chip Apple M3, 8GB RAM, 256GB SSD, οθόνη Liquid Retina 13.6". Η τελειότερη φορητότητα.</p>
+            <div class="stars mb-2">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <span>(2.876)</span>
+            </div>
+            <p class="card-text mb-3">
+              <span class="price-new">€1.299</span>
+            </p>
+            <a href="product2.html" class="btn btn-primary mt-auto">Δες Λεπτομέρειες</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Samsung Galaxy S24 Ultra -->
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-img-wrapper">
+            <span class="product-badge badge-new">New</span>
+            <img src="https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=250&fit=crop&crop=center" class="card-img-top" alt="Samsung Galaxy S24 Ultra">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <span class="category-pill">Smartphones</span>
+            <h5 class="card-title">Samsung Galaxy S24 Ultra</h5>
+            <p class="card-text flex-grow-1">Snapdragon 8 Gen 3, κάμερα 200MP, S Pen, οθόνη 6.8" Dynamic AMOLED 2X, 5000mAh.</p>
+            <div class="stars mb-2">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+              <span>(3.512)</span>
+            </div>
+            <p class="card-text mb-3">
+              <span class="price-old">€1.349</span>
+              <span class="price-new">€1.199</span>
+            </p>
+            <a href="product3.html" class="btn btn-primary mt-auto">Δες Λεπτομέρειες</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="row">
+
+      <!-- LG 27" 4K Monitor -->
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-img-wrapper">
+            <span class="product-badge badge-sale">-20%</span>
+            <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=250&fit=crop&crop=center" class="card-img-top" alt="LG 27UK850 4K Monitor">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <span class="category-pill">Monitors</span>
+            <h5 class="card-title">LG 27" 4K IPS Monitor</h5>
+            <p class="card-text flex-grow-1">Panel IPS 3840×2160, HDR10, 99% sRGB, USB-C 60W charging. Ιδανικό για επαγγελματίες.</p>
+            <div class="stars mb-2">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+              <span>(689)</span>
+            </div>
+            <p class="card-text mb-3">
+              <span class="price-old">€559</span>
+              <span class="price-new">€449</span>
+            </p>
+            <a href="product4.html" class="btn btn-primary mt-auto">Δες Λεπτομέρειες</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PlayStation 5 Slim -->
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-img-wrapper">
+            <span class="product-badge badge-hot">Hot</span>
+            <img src="https://images.unsplash.com/photo-1486401899868-0e435ed85128?w=400&h=250&fit=crop&crop=center" class="card-img-top" alt="PlayStation 5">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <span class="category-pill">Gaming</span>
+            <h5 class="card-title">PlayStation 5 Slim</h5>
+            <p class="card-text flex-grow-1">CPU AMD Zen 2 3.5GHz, GPU 10.28 TFLOPs, SSD 1TB NVMe. 4K gaming με 120fps.</p>
+            <div class="stars mb-2">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              <span>(4.201)</span>
+            </div>
+            <p class="card-text mb-3">
+              <span class="price-new">€449</span>
+            </p>
+            <a href="product5.html" class="btn btn-primary mt-auto">Δες Λεπτομέρειες</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logitech MX Master 3S -->
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-img-wrapper">
+            <img src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=250&fit=crop&crop=center" class="card-img-top" alt="Logitech MX Master 3S">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <span class="category-pill">Peripherals</span>
+            <h5 class="card-title">Logitech MX Master 3S</h5>
+            <p class="card-text flex-grow-1">8000 DPI, MagSpeed scroll, σύνδεση σε έως 3 συσκευές, ergonomic design. Το καλύτερο productivity mouse.</p>
+            <div class="stars mb-2">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+              <span>(921)</span>
+            </div>
+            <p class="card-text mb-3">
+              <span class="price-old">€109</span>
+              <span class="price-new">€89</span>
+            </p>
+            <a href="product6.html" class="btn btn-primary mt-auto">Δες Λεπτομέρειες</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center">
+    <div class="container">
+      <div class="row">
+        <!-- Quick Links -->
+        <div class="col-md-3 mb-3">
+          <h5>Quick Links</h5>
+          <ul class="list-unstyled">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.html">Shop</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="cart.html">Cart</a></li>
+            <li><a href="terms.html">Terms & Conditions</a></li>
+
+          </ul>
+        </div>
+
+        <!-- Follow Us -->
+        <div class="col-md-3 mb-3">
+          <h5>Follow Us</h5>
+          <div class="social-icons">
+            <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="col-md-3 mb-3">
+          <h5>Contact Info</h5>
+          <p>Email: support@mystore.com</p>
+          <p>Phone: +1 (123) 456-7890</p>
+          <p>Address: 123 Store St, City, Country</p>
+        </div>
+
+        <!-- Newsletter Subscription -->
+        <div class="col-md-3 mb-3">
+          <h5>Subscribe to Our Newsletter</h5>
+          <form id="newsletter-form">
+            <div class="input-group">
+              <input type="email" id="newsletter-email" class="form-control" placeholder="Enter your email" required>
+              <button type="submit" class="btn btn-primary">Subscribe</button>
+            </div>
+            <p id="newsletter-message" class="mt-2 text-success" style="display: none;">Thank you for subscribing!</p>
+          </form>
+        </div>
+      </div>
+      <hr>
+      <p class="mb-0">&copy; 2023 My Store. All rights reserved.</p>
+    </div>
+  </footer>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Video carousel: play active, pause inactive -->
+  <script>
+    const heroCarousel = document.getElementById('heroCarousel');
+    heroCarousel.addEventListener('slide.bs.carousel', function (e) {
+      const leaving = e.from !== undefined ? heroCarousel.querySelectorAll('.carousel-item')[e.from].querySelector('video') : null;
+      const entering = heroCarousel.querySelectorAll('.carousel-item')[e.to].querySelector('video');
+      if (leaving) leaving.pause();
+      if (entering) { entering.currentTime = 0; entering.play(); }
+    });
+  </script>
+
+  <!-- JavaScript for Newsletter Subscription -->
+  <script>
+    document.getElementById("newsletter-form").addEventListener("submit", function (event)
+    {
+      event.preventDefault();
+      let email = document.getElementById("newsletter-email").value;
+      if (email)
+      {
+        document.getElementById("newsletter-message").style.display = "block";
+        document.getElementById("newsletter-email").value = ""; // Clear input field
+      }
+    });
+  </script>
+</body>
+
+</html>

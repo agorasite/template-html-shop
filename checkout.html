@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — TechStore</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-primary:    #0a0e1a;
+      --bg-secondary:  #111827;
+      --bg-card:       #141d2e;
+      --accent-blue:   #0078ff;
+      --accent-cyan:   #00c8ff;
+      --accent-hover:  #005ecc;
+      --border-subtle: #1e3d6b;
+      --text-primary:  #e8edf5;
+      --text-muted:    #8a9bbf;
+      --price-color:   #00c8ff;
+      --danger:        #e53e3e;
+      --success:       #48bb78;
+    }
+
+    * { box-sizing: border-box; }
+    body { background-color: var(--bg-primary); color: var(--text-primary); min-height: 100vh; }
+
+    /* ── Navbar ── */
+    .navbar { background-color: var(--bg-secondary); border-bottom: 2px solid var(--accent-blue); box-shadow: 0 2px 20px rgba(0,120,255,.15); }
+    .navbar-brand img { height: 80px; }
+    .nav-link { color: var(--text-muted) !important; transition: color .2s; }
+    .nav-link:hover, .nav-link.active { color: var(--accent-cyan) !important; }
+    .dropdown-menu { background-color: var(--bg-secondary); border: 1px solid var(--border-subtle); }
+    .dropdown-item { color: var(--text-muted); }
+    .dropdown-item:hover { background-color: rgba(0,120,255,.15); color: var(--accent-cyan); }
+
+    .breadcrumb { background: transparent; margin: 0; padding: 0; }
+    .breadcrumb-item a { color: var(--accent-blue); text-decoration: none; }
+    .breadcrumb-item a:hover { color: var(--accent-cyan); }
+    .breadcrumb-item.active { color: var(--text-muted); }
+    .breadcrumb-item + .breadcrumb-item::before { color: var(--border-subtle); }
+
+    /* ── Stepper ── */
+    .stepper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 32px;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-circle {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--border-subtle);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .3s;
+    }
+
+    .step.active .step-circle {
+      border-color: var(--accent-blue);
+      background: var(--accent-blue);
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(0,120,255,.2);
+    }
+
+    .step.done .step-circle {
+      border-color: var(--success);
+      background: var(--success);
+      color: #fff;
+    }
+
+    .step-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .step.active .step-label { color: var(--accent-cyan); }
+    .step.done  .step-label { color: var(--success); }
+
+    .step-connector {
+      flex: 1;
+      height: 2px;
+      background: var(--border-subtle);
+      margin: 0 8px;
+      margin-bottom: 22px;
+      transition: background .3s;
+      min-width: 40px;
+    }
+    .step-connector.done { background: var(--success); }
+
+    /* ── Cards ── */
+    .checkout-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex; align-items: center; gap: 10px;
+      color: var(--text-primary);
+    }
+    .card-title i { color: var(--accent-blue); }
+
+    /* ── Form ── */
+    .form-label { color: var(--text-muted); font-size: 0.82rem; font-weight: 500; margin-bottom: 5px; }
+    .form-control, .form-select {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      color: var(--text-primary);
+      padding: 9px 13px;
+      font-size: 0.88rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .form-control:focus, .form-select:focus {
+      background-color: var(--bg-primary);
+      border-color: var(--accent-blue);
+      color: var(--text-primary);
+      box-shadow: 0 0 0 3px rgba(0,120,255,.2);
+    }
+    .form-control::placeholder { color: var(--text-muted); }
+    .form-select option { background: var(--bg-secondary); }
+    .form-control.is-invalid { border-color: var(--danger); }
+    .form-check-input { accent-color: var(--accent-blue); }
+    .form-check-label { color: var(--text-muted); font-size: .88rem; }
+
+    /* ── Shipping methods ── */
+    .shipping-option {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+    }
+    .shipping-option:hover { border-color: var(--accent-blue); }
+    .shipping-option.selected { border-color: var(--accent-blue); background: rgba(0,120,255,.08); }
+    .shipping-option input[type=radio] { accent-color: var(--accent-blue); width: 16px; height: 16px; flex-shrink: 0; }
+    .shipping-option .so-icon { font-size: 1.4rem; color: var(--accent-blue); width: 32px; text-align: center; flex-shrink: 0; }
+    .shipping-option .so-name { font-weight: 600; font-size: 0.88rem; }
+    .shipping-option .so-eta  { font-size: 0.78rem; color: var(--text-muted); }
+    .shipping-option .so-price { margin-left: auto; font-weight: 700; color: var(--price-color); font-size: 0.9rem; flex-shrink: 0; }
+    .shipping-option .so-price.free { color: var(--success); }
+
+    /* ── Payment methods ── */
+    .pay-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .pay-tab {
+      flex: 1; min-width: 110px;
+      padding: 12px 10px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: all .2s;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .pay-tab i { display: block; font-size: 1.4rem; margin-bottom: 5px; }
+    .pay-tab:hover { border-color: var(--accent-blue); }
+    .pay-tab.active { border-color: var(--accent-blue); background: rgba(0,120,255,.12); color: var(--accent-cyan); }
+
+    .pay-panel { display: none; }
+    .pay-panel.active { display: block; }
+
+    .card-input-wrap { position: relative; }
+    .card-input-wrap .card-icon {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--text-muted); font-size: 1.1rem; pointer-events: none;
+    }
+
+    /* ── Order summary ── */
+    .summary-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 24px;
+      position: sticky;
+      top: 20px;
+    }
+
+    .summary-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(30,61,107,.35);
+    }
+    .summary-item:last-of-type { border-bottom: none; }
+    .summary-item img { width: 52px; height: 52px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-subtle); flex-shrink: 0; }
+    .summary-item .si-name { font-size: 0.84rem; color: var(--text-primary); font-weight: 600; }
+    .summary-item .si-qty  { font-size: 0.75rem; color: var(--text-muted); }
+    .summary-item .si-price { margin-left: auto; color: var(--price-color); font-weight: 700; font-size: 0.88rem; flex-shrink: 0; }
+
+    .coupon-row { display: flex; gap: 8px; margin: 16px 0; }
+    .coupon-row .form-control { flex: 1; }
+    .btn-coupon {
+      background: transparent; border: 1px solid var(--accent-blue);
+      color: var(--accent-cyan); font-size: 0.82rem; font-weight: 600;
+      padding: 7px 14px; border-radius: 8px; cursor: pointer; white-space: nowrap;
+      transition: background .2s;
+    }
+    .btn-coupon:hover { background: rgba(0,120,255,.12); }
+
+    .summary-totals { margin-top: 12px; }
+    .total-row { display: flex; justify-content: space-between; font-size: 0.86rem; margin-bottom: 7px; color: var(--text-muted); }
+    .total-row .val { color: var(--text-primary); }
+    .total-row.free-ship .val { color: var(--success); }
+    .total-row.discount { display: none; }
+    .total-row.discount .val { color: var(--success); }
+    .total-final { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid var(--border-subtle); margin-top: 6px; font-weight: 700; font-size: 1.05rem; }
+    .total-final .val { color: var(--price-color); font-size: 1.15rem; }
+
+    /* ── Buttons ── */
+    .btn-next {
+      width: 100%; background: var(--accent-blue); border: none;
+      color: #fff; font-weight: 700; font-size: 0.95rem;
+      padding: 13px; border-radius: 10px; cursor: pointer;
+      transition: background .2s, box-shadow .2s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      margin-top: 10px;
+    }
+    .btn-next:hover { background: var(--accent-hover); box-shadow: 0 4px 20px rgba(0,120,255,.4); }
+
+    .btn-back {
+      background: transparent; border: 1px solid var(--border-subtle);
+      color: var(--text-muted); font-size: 0.88rem;
+      padding: 9px 20px; border-radius: 8px; cursor: pointer;
+      transition: all .2s; margin-top: 10px;
+    }
+    .btn-back:hover { border-color: var(--accent-blue); color: var(--text-primary); }
+
+    .btn-pay {
+      width: 100%; background: linear-gradient(135deg, #0078ff, #0055cc);
+      border: none; color: #fff; font-weight: 700; font-size: 1rem;
+      padding: 14px; border-radius: 10px; cursor: pointer;
+      transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 10px;
+      box-shadow: 0 4px 20px rgba(0,120,255,.3);
+      margin-top: 14px;
+    }
+    .btn-pay:hover { background: linear-gradient(135deg, #005ecc, #003ea8); box-shadow: 0 6px 28px rgba(0,120,255,.5); }
+    .btn-pay:disabled { opacity: .6; cursor: not-allowed; }
+    .btn-pay .spinner { display: none; }
+    .btn-pay.loading .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+    .btn-pay.loading .btn-text { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+
+    /* ── Secure badges ── */
+    .secure-badges { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+    .secure-badge { display: flex; align-items: center; gap: 5px; font-size: 0.72rem; color: var(--text-muted); }
+    .secure-badge i { color: var(--success); }
+
+    /* ── Confirmation ── */
+    #step-confirm { display: none; text-align: center; }
+    .confirm-icon { width: 80px; height: 80px; background: rgba(72,187,120,.15); border: 2px solid var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--success); margin: 0 auto 20px; }
+    .confirm-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+    .confirm-order-num { font-family: monospace; color: var(--accent-cyan); font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+    .confirm-msg { color: var(--text-muted); font-size: 0.9rem; max-width: 400px; margin: 0 auto 24px; line-height: 1.7; }
+    .confirm-steps { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 28px; }
+    .cs-item { text-align: center; }
+    .cs-circle { width: 46px; height: 46px; border-radius: 50%; background: rgba(0,120,255,.12); border: 1px solid var(--accent-blue); display: flex; align-items: center; justify-content: center; color: var(--accent-cyan); font-size: 1.1rem; margin: 0 auto 6px; }
+    .cs-lbl { font-size: 0.72rem; color: var(--text-muted); }
+
+    /* ── Footer ── */
+    footer { background-color: var(--bg-secondary); color: var(--text-muted); padding: 20px 0; margin-top: 60px; border-top: 1px solid var(--border-subtle); }
+    footer h5 { color: var(--text-primary); font-weight: 600; }
+    footer a { color: var(--accent-blue); text-decoration: none; }
+    footer a:hover { color: var(--accent-cyan); }
+    footer hr { border-color: var(--border-subtle); }
+    .social-icons a { color: var(--text-muted); margin: 0 10px; font-size: 1.5rem; transition: color .2s; }
+    .social-icons a:hover { color: var(--accent-cyan); }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><img src="https://placehold.co/80x80" alt="TechStore"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-home"></i> Home</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="fas fa-store"></i> Shop</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="shop.html">All Products</a></li>
+              <li><a class="dropdown-item" href="shop.html">Electronics</a></li>
+              <li><a class="dropdown-item" href="shop.html">Accessories</a></li>
+              <li><a class="dropdown-item" href="shop.html">Gaming</a></li>
+              <li><a class="dropdown-item" href="shop.html">Smart Home</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+          <li class="nav-item"><a class="nav-link" href="profile.html"><i class="fas fa-user"></i> Profile</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-3 mb-2">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item"><a href="cart.html">Καλάθι</a></li>
+        <li class="breadcrumb-item active">Checkout</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="container mt-4 mb-5">
+
+    <!-- ── Stepper ── -->
+    <div class="stepper">
+      <div class="step active" id="dot-1">
+        <div class="step-circle" id="circ-1">1</div>
+        <div class="step-label">Στοιχεία</div>
+      </div>
+      <div class="step-connector" id="conn-1"></div>
+      <div class="step" id="dot-2">
+        <div class="step-circle" id="circ-2">2</div>
+        <div class="step-label">Αποστολή</div>
+      </div>
+      <div class="step-connector" id="conn-2"></div>
+      <div class="step" id="dot-3">
+        <div class="step-circle" id="circ-3">3</div>
+        <div class="step-label">Πληρωμή</div>
+      </div>
+      <div class="step-connector" id="conn-3"></div>
+      <div class="step" id="dot-4">
+        <div class="step-circle" id="circ-4">4</div>
+        <div class="step-label">Επιβεβαίωση</div>
+      </div>
+    </div>
+
+    <div class="row g-4 align-items-start">
+
+      <!-- ── Left: Forms ── -->
+      <div class="col-lg-8">
+
+        <!-- STEP 1 — Contact & Shipping Address -->
+        <div id="step-1">
+
+          <div class="checkout-card">
+            <div class="card-title"><i class="fas fa-user"></i>Στοιχεία Επικοινωνίας</div>
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label class="form-label">Όνομα <span style="color:var(--danger)">*</span></label>
+                <input type="text" class="form-control" id="inp-fname" placeholder="π.χ. Γιώργος">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Επώνυμο <span style="color:var(--danger)">*</span></label>
+                <input type="text" class="form-control" id="inp-lname" placeholder="π.χ. Αλεξανδρόπουλος">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Email <span style="color:var(--danger)">*</span></label>
+                <input type="email" class="form-control" id="inp-email" placeholder="email@example.com">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label">Τηλέφωνο <span style="color:var(--danger)">*</span></label>
+                <input type="tel" class="form-control" id="inp-phone" placeholder="+30 697 000 0000">
+              </div>
+            </div>
+          </div>
+
+          <div class="checkout-card">
+            <div class="card-title"><i class="fas fa-map-marker-alt"></i>Διεύθυνση Αποστολής</div>
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label">Οδός &amp; Αριθμός <span style="color:var(--danger)">*</span></label>
+                <input type="text" class="form-control" id="inp-street" placeholder="π.χ. Λεωφ. Κηφισίας 24">
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label">Τ.Κ. <span style="color:var(--danger)">*</span></label>
+                <input type="text" class="form-control" id="inp-postal" placeholder="115 26" maxlength="7">
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label">Πόλη <span style="color:var(--danger)">*</span></label>
+                <input type="text" class="form-control" id="inp-city" placeholder="Αθήνα">
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label">Χώρα</label>
+                <select class="form-select" id="inp-country">
+                  <option value="GR" selected>Ελλάδα</option>
+                  <option value="CY">Κύπρος</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Σχόλια / Οδηγίες αποστολής</label>
+                <textarea class="form-control" rows="2" placeholder="π.χ. Πύλη Β, 2ος όροφος..."></textarea>
+              </div>
+            </div>
+
+            <div class="form-check mt-3">
+              <input class="form-check-input" type="checkbox" id="diff-billing">
+              <label class="form-check-label" for="diff-billing">Διαφορετική διεύθυνση τιμολόγησης</label>
+            </div>
+
+            <div id="billing-extra" style="display:none;margin-top:16px">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label">Οδός &amp; Αριθμός (τιμολόγηση)</label>
+                  <input type="text" class="form-control" placeholder="π.χ. Πατησίων 10">
+                </div>
+                <div class="col-sm-4"><label class="form-label">Τ.Κ.</label><input type="text" class="form-control" placeholder="106 77" maxlength="7"></div>
+                <div class="col-sm-4"><label class="form-label">Πόλη</label><input type="text" class="form-control" placeholder="Αθήνα"></div>
+                <div class="col-sm-4"><label class="form-label">Χώρα</label><select class="form-select"><option selected>Ελλάδα</option><option>Κύπρος</option></select></div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-next" onclick="goStep(2)">
+            <span>Επόμενο: Αποστολή</span><i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- STEP 2 — Shipping Method -->
+        <div id="step-2" style="display:none">
+
+          <div class="checkout-card">
+            <div class="card-title"><i class="fas fa-truck"></i>Τρόπος Αποστολής</div>
+
+            <div class="shipping-option selected" id="ship-standard" onclick="selectShipping('standard', 0)">
+              <input type="radio" name="shipping" checked>
+              <div class="so-icon"><i class="fas fa-box"></i></div>
+              <div>
+                <div class="so-name">Κανονική Αποστολή</div>
+                <div class="so-eta">2–4 εργάσιμες ημέρες</div>
+              </div>
+              <div class="so-price free">Δωρεάν</div>
+            </div>
+
+            <div class="shipping-option" id="ship-express" onclick="selectShipping('express', 5.90)">
+              <input type="radio" name="shipping">
+              <div class="so-icon"><i class="fas fa-shipping-fast"></i></div>
+              <div>
+                <div class="so-name">Express Αποστολή</div>
+                <div class="so-eta">Επόμενη εργάσιμη</div>
+              </div>
+              <div class="so-price">€5,90</div>
+            </div>
+
+            <div class="shipping-option" id="ship-same" onclick="selectShipping('same', 12.90)">
+              <input type="radio" name="shipping">
+              <div class="so-icon"><i class="fas fa-bolt"></i></div>
+              <div>
+                <div class="so-name">Same-Day Delivery</div>
+                <div class="so-eta">Παράδοση σήμερα (έως 18:00)</div>
+              </div>
+              <div class="so-price">€12,90</div>
+            </div>
+
+            <div class="shipping-option" id="ship-store" onclick="selectShipping('store', 0)">
+              <input type="radio" name="shipping">
+              <div class="so-icon"><i class="fas fa-store"></i></div>
+              <div>
+                <div class="so-name">Παραλαβή από κατάστημα</div>
+                <div class="so-eta">Λεωφ. Κηφισίας 24, Αθήνα</div>
+              </div>
+              <div class="so-price free">Δωρεάν</div>
+            </div>
+          </div>
+
+          <div class="d-flex gap-3 mt-2">
+            <button class="btn-back" onclick="goStep(1)"><i class="fas fa-arrow-left me-2"></i>Πίσω</button>
+            <button class="btn-next" onclick="goStep(3)" style="flex:1"><span>Επόμενο: Πληρωμή</span><i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- STEP 3 — Payment -->
+        <div id="step-3" style="display:none">
+
+          <div class="checkout-card">
+            <div class="card-title"><i class="fas fa-lock"></i>Τρόπος Πληρωμής</div>
+
+            <div class="pay-tabs">
+              <div class="pay-tab active" id="ptab-card" onclick="selectPay('card')">
+                <i class="far fa-credit-card"></i>Κάρτα
+              </div>
+              <div class="pay-tab" id="ptab-paypal" onclick="selectPay('paypal')">
+                <i class="fab fa-paypal"></i>PayPal
+              </div>
+              <div class="pay-tab" id="ptab-apple" onclick="selectPay('apple')">
+                <i class="fab fa-apple-pay"></i>Apple Pay
+              </div>
+              <div class="pay-tab" id="ptab-bank" onclick="selectPay('bank')">
+                <i class="fas fa-university"></i>Κατάθεση
+              </div>
+            </div>
+
+            <!-- Card panel -->
+            <div class="pay-panel active" id="panel-card">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label">Αριθμός κάρτας</label>
+                  <div class="card-input-wrap">
+                    <input type="text" class="form-control" id="inp-card" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)">
+                    <span class="card-icon" id="card-brand-icon"><i class="far fa-credit-card"></i></span>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label">Ημερομηνία λήξης</label>
+                  <input type="text" class="form-control" placeholder="ΜΜ / ΕΕ" maxlength="7" oninput="formatExpiry(this)">
+                </div>
+                <div class="col-sm-6">
+                  <label class="form-label">CVV</label>
+                  <div class="card-input-wrap">
+                    <input type="text" class="form-control" placeholder="•••" maxlength="4">
+                    <span class="card-icon"><i class="fas fa-question-circle"></i></span>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Ονοματεπώνυμο κατόχου</label>
+                  <input type="text" class="form-control" placeholder="GEORGIOS ALEXANDROPOULOS">
+                </div>
+                <div class="col-12">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="save-card">
+                    <label class="form-check-label" for="save-card">Αποθήκευση κάρτας για μελλοντικές αγορές</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PayPal panel -->
+            <div class="pay-panel" id="panel-paypal">
+              <div style="background:rgba(0,120,255,.06);border:1px solid var(--border-subtle);border-radius:10px;padding:24px;text-align:center;">
+                <i class="fab fa-paypal" style="font-size:2.8rem;color:#0070e0;margin-bottom:12px;display:block"></i>
+                <div style="font-size:.9rem;color:var(--text-muted)">Θα ανακατευθυνθείς στο PayPal για να ολοκληρώσεις την πληρωμή.</div>
+              </div>
+            </div>
+
+            <!-- Apple Pay panel -->
+            <div class="pay-panel" id="panel-apple">
+              <div style="background:rgba(255,255,255,.04);border:1px solid var(--border-subtle);border-radius:10px;padding:24px;text-align:center;">
+                <i class="fab fa-apple" style="font-size:2.8rem;color:var(--text-primary);margin-bottom:12px;display:block"></i>
+                <div style="font-size:.9rem;color:var(--text-muted)">Χρησιμοποίησε Apple Pay για γρήγορη και ασφαλή πληρωμή.</div>
+              </div>
+            </div>
+
+            <!-- Bank transfer panel -->
+            <div class="pay-panel" id="panel-bank">
+              <div style="background:rgba(0,120,255,.06);border:1px solid var(--border-subtle);border-radius:10px;padding:20px;">
+                <div style="font-size:.82rem;color:var(--text-muted);margin-bottom:14px">Κάνε κατάθεση στον παρακάτω λογαριασμό. Η παραγγελία επεξεργάζεται μόλις επιβεβαιωθεί η πληρωμή.</div>
+                <div class="row g-2" style="font-size:.86rem">
+                  <div class="col-4" style="color:var(--text-muted)">Τράπεζα:</div><div class="col-8" style="color:var(--text-primary);font-weight:600">Εθνική Τράπεζα</div>
+                  <div class="col-4" style="color:var(--text-muted)">Δικαιούχος:</div><div class="col-8" style="color:var(--text-primary);font-weight:600">TechStore ΙΚΕ</div>
+                  <div class="col-4" style="color:var(--text-muted)">IBAN:</div><div class="col-8" style="color:var(--accent-cyan);font-weight:600;font-family:monospace">GR16 0110 0250 0000 0250 0001 058</div>
+                  <div class="col-4" style="color:var(--text-muted)">Αιτιολογία:</div><div class="col-8" style="color:var(--text-primary)">Αριθμός παραγγελίας (θα σταλεί με email)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex gap-3 mt-2">
+            <button class="btn-back" onclick="goStep(2)"><i class="fas fa-arrow-left me-2"></i>Πίσω</button>
+            <button class="btn-pay" id="payBtn" onclick="placeOrder()" style="flex:1">
+              <span class="btn-text"><i class="fas fa-lock me-2"></i>Ολοκλήρωση Παραγγελίας</span>
+              <span class="spinner"></span>
+            </button>
+          </div>
+
+          <div class="secure-badges">
+            <div class="secure-badge"><i class="fas fa-lock"></i>SSL Encrypted</div>
+            <div class="secure-badge"><i class="fas fa-shield-alt"></i>3D Secure</div>
+            <div class="secure-badge"><i class="fas fa-check-circle"></i>PCI DSS</div>
+            <div class="secure-badge"><i class="fas fa-undo"></i>14 Ημ. Επιστροφή</div>
+          </div>
+        </div>
+
+        <!-- STEP 4 — Confirmation -->
+        <div id="step-confirm">
+          <div class="checkout-card">
+            <div class="confirm-icon"><i class="fas fa-check"></i></div>
+            <div class="confirm-title">Η παραγγελία σου ολοκληρώθηκε!</div>
+            <div class="confirm-order-num" id="confirm-order-num">#TS-0000</div>
+            <div class="confirm-msg">Σε ευχαριστούμε για την αγορά σου! Θα λάβεις επιβεβαίωση στο email σου με όλες τις λεπτομέρειες.</div>
+            <div class="confirm-steps">
+              <div class="cs-item"><div class="cs-circle"><i class="fas fa-envelope"></i></div><div class="cs-lbl">Email επιβεβαίωσης</div></div>
+              <div class="cs-item"><div class="cs-circle"><i class="fas fa-warehouse"></i></div><div class="cs-lbl">Προετοιμασία</div></div>
+              <div class="cs-item"><div class="cs-circle"><i class="fas fa-truck"></i></div><div class="cs-lbl">Αποστολή</div></div>
+              <div class="cs-item"><div class="cs-circle"><i class="fas fa-home"></i></div><div class="cs-lbl">Παράδοση</div></div>
+            </div>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+              <a href="profile.html" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;background:var(--accent-blue);border:none;color:#fff;font-weight:600;padding:10px 24px;border-radius:8px;font-size:.9rem"><i class="fas fa-box"></i>Οι Παραγγελίες μου</a>
+              <a href="shop.html" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--border-subtle);color:var(--text-muted);font-size:.88rem;padding:10px 24px;border-radius:8px"><i class="fas fa-store"></i>Συνέχεια Shopping</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Right: Order Summary ── -->
+      <div class="col-lg-4">
+        <div class="summary-card">
+          <div style="font-weight:700;font-size:1rem;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border-subtle)">
+            <i class="fas fa-shopping-bag me-2" style="color:var(--accent-blue)"></i>Σύνοψη Παραγγελίας
+          </div>
+
+          <div class="summary-item">
+            <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=100&h=100&fit=crop&crop=center" alt="Sony">
+            <div>
+              <div class="si-name">Sony WH-1000XM5</div>
+              <div class="si-qty">×1</div>
+            </div>
+            <div class="si-price">€319</div>
+          </div>
+
+          <div class="summary-item">
+            <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=100&h=100&fit=crop&crop=center" alt="MacBook">
+            <div>
+              <div class="si-name">MacBook Air M3</div>
+              <div class="si-qty">×1</div>
+            </div>
+            <div class="si-price">€1.299</div>
+          </div>
+
+          <div class="summary-item">
+            <img src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=100&h=100&fit=crop&crop=center" alt="Logitech">
+            <div>
+              <div class="si-name">Logitech MX Master 3S</div>
+              <div class="si-qty">×2</div>
+            </div>
+            <div class="si-price">€178</div>
+          </div>
+
+          <div class="coupon-row">
+            <input type="text" class="form-control" id="couponInput" placeholder="Κωδικός κουπονιού" style="font-size:.84rem">
+            <button class="btn-coupon" onclick="applyCoupon()">Εφαρμογή</button>
+          </div>
+          <div id="coupon-msg" style="font-size:.78rem;margin-top:-6px;margin-bottom:10px;display:none"></div>
+
+          <div class="summary-totals">
+            <div class="total-row">
+              <span>Υποσύνολο</span><span class="val" id="s-subtotal">€1.796</span>
+            </div>
+            <div class="total-row free-ship" id="s-ship-row">
+              <span>Αποστολή</span><span class="val" id="s-ship">Δωρεάν</span>
+            </div>
+            <div class="total-row discount" id="s-discount-row">
+              <span>Έκπτωση κουπονιού</span><span class="val" id="s-discount">−€0</span>
+            </div>
+            <div class="total-row">
+              <span>ΦΠΑ (24%)</span><span class="val" id="s-vat">€347</span>
+            </div>
+          </div>
+
+          <div class="total-final">
+            <span>Σύνολο</span>
+            <span class="val" id="s-total">€2.143</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 mb-3"><h5>Quick Links</h5><ul class="list-unstyled"><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="contact.html">Contact</a></li><li><a href="cart.html">Cart</a></li></ul></div>
+        <div class="col-md-3 mb-3"><h5>Follow Us</h5><div class="social-icons"><a href="#"><i class="fab fa-facebook"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-linkedin"></i></a></div></div>
+        <div class="col-md-3 mb-3"><h5>Contact Info</h5><p>Email: support@techstore.gr</p><p>Phone: +30 210 123 4567</p><p>Αθήνα, Ελλάδα</p></div>
+        <div class="col-md-3 mb-3"><h5>Newsletter</h5><form id="newsletter-form"><div class="input-group"><input type="email" id="newsletter-email" class="form-control" placeholder="Το email σου" required><button type="submit" class="btn btn-primary">OK</button></div><p id="newsletter-message" class="mt-2 text-success" style="display:none">Ευχαριστούμε!</p></form></div>
+      </div>
+      <hr><p class="mb-0">&copy; 2025 TechStore. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let currentStep = 1;
+    let shippingCost = 0;
+    const BASE_SUBTOTAL = 1796;
+    let discount = 0;
+    const COUPONS = { 'TECH10': 0.10, 'SAVE20': 0.20, 'TECHSTORE': 0.15 };
+
+    function goStep(n) {
+      if (n > 1 && !validateStep(currentStep)) return;
+
+      document.getElementById('step-1').style.display = 'none';
+      document.getElementById('step-2').style.display = 'none';
+      document.getElementById('step-3').style.display = 'none';
+      document.getElementById('step-confirm').style.display = 'none';
+
+      if (n <= 3) {
+        document.getElementById('step-' + n).style.display = 'block';
+      } else {
+        document.getElementById('step-confirm').style.display = 'block';
+      }
+
+      for (let i = 1; i <= 4; i++) {
+        const dot  = document.getElementById('dot-'  + i);
+        const conn = document.getElementById('conn-' + i);
+        if (!dot) continue;
+        dot.classList.remove('active', 'done');
+        if (i < n)  dot.classList.add('done');
+        if (i === n) dot.classList.add('active');
+        const circ = document.getElementById('circ-' + i);
+        if (i < n) circ.innerHTML = '<i class="fas fa-check" style="font-size:.7rem"></i>';
+        else circ.textContent = i;
+        if (conn) conn.classList.toggle('done', i < n);
+      }
+
+      currentStep = n;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function validateStep(step) {
+      if (step !== 1) return true;
+      const req = ['inp-fname','inp-lname','inp-email','inp-phone','inp-street','inp-postal','inp-city'];
+      let ok = true;
+      req.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) { el.classList.add('is-invalid'); ok = false; }
+        else el.classList.remove('is-invalid');
+      });
+      if (!ok) {
+        const card = document.querySelector('#step-1 .checkout-card');
+        card.style.animation = 'none';
+        void card.offsetWidth;
+        card.style.animation = 'shake .4s ease';
+      }
+      return ok;
+    }
+
+    function selectShipping(key, cost) {
+      ['standard','express','same','store'].forEach(k => {
+        const el = document.getElementById('ship-' + k);
+        el.classList.toggle('selected', k === key);
+        el.querySelector('input').checked = k === key;
+      });
+      shippingCost = cost;
+      updateTotals();
+    }
+
+    function selectPay(key) {
+      ['card','paypal','apple','bank'].forEach(k => {
+        document.getElementById('ptab-' + k).classList.toggle('active', k === key);
+        document.getElementById('panel-' + k).classList.toggle('active', k === key);
+      });
+    }
+
+    function formatCard(el) {
+      let v = el.value.replace(/\D/g,'').substring(0,16);
+      el.value = v.match(/.{1,4}/g)?.join(' ') || v;
+      const icon = document.getElementById('card-brand-icon');
+      if (/^4/.test(v))        icon.innerHTML = '<i class="fab fa-cc-visa" style="color:#1a1f71"></i>';
+      else if (/^5[1-5]/.test(v)) icon.innerHTML = '<i class="fab fa-cc-mastercard" style="color:#eb001b"></i>';
+      else if (/^3[47]/.test(v))  icon.innerHTML = '<i class="fab fa-cc-amex" style="color:#2e77bc"></i>';
+      else icon.innerHTML = '<i class="far fa-credit-card"></i>';
+    }
+
+    function formatExpiry(el) {
+      let v = el.value.replace(/\D/g,'').substring(0,4);
+      if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2);
+      el.value = v;
+    }
+
+    function applyCoupon() {
+      const code = document.getElementById('couponInput').value.trim().toUpperCase();
+      const msg  = document.getElementById('coupon-msg');
+      msg.style.display = 'block';
+      if (COUPONS[code] !== undefined) {
+        discount = COUPONS[code];
+        msg.style.color = 'var(--success)';
+        msg.innerHTML   = '<i class="fas fa-check-circle me-1"></i>Κουπόνι εφαρμόστηκε: −' + (discount * 100) + '%';
+        document.getElementById('s-discount-row').style.display = 'flex';
+      } else {
+        discount = 0;
+        msg.style.color = 'var(--danger)';
+        msg.innerHTML   = '<i class="fas fa-times-circle me-1"></i>Μη έγκυρο κουπόνι';
+        document.getElementById('s-discount-row').style.display = 'none';
+      }
+      updateTotals();
+    }
+
+    function updateTotals() {
+      const sub       = BASE_SUBTOTAL;
+      const disc      = Math.round(sub * discount);
+      const afterDisc = sub - disc + shippingCost;
+      const vat       = Math.round(afterDisc * 0.24);
+      const total     = afterDisc + vat;
+      document.getElementById('s-subtotal').textContent = '€' + fmt(sub);
+      document.getElementById('s-ship').textContent     = shippingCost === 0 ? 'Δωρεάν' : '€' + shippingCost.toFixed(2).replace('.',',');
+      document.getElementById('s-ship-row').className   = 'total-row' + (shippingCost === 0 ? ' free-ship' : '');
+      document.getElementById('s-discount').textContent = '−€' + fmt(disc);
+      document.getElementById('s-vat').textContent      = '€' + fmt(vat);
+      document.getElementById('s-total').textContent    = '€' + fmt(total);
+    }
+
+    function fmt(n) { return n.toLocaleString('el-GR'); }
+
+    function placeOrder() {
+      const btn = document.getElementById('payBtn');
+      btn.disabled = true;
+      btn.classList.add('loading');
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        const num = '#TS-' + (Math.floor(Math.random() * 9000) + 1000);
+        document.getElementById('confirm-order-num').textContent = num;
+        goStep(4);
+      }, 2000);
+    }
+
+    document.getElementById('diff-billing').addEventListener('change', function() {
+      document.getElementById('billing-extra').style.display = this.checked ? 'block' : 'none';
+    });
+
+    ['inp-fname','inp-lname','inp-email','inp-phone','inp-street','inp-postal','inp-city'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', function() {
+        if (this.value.trim()) this.classList.remove('is-invalid');
+      });
+    });
+
+    document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (document.getElementById('newsletter-email').value) {
+        document.getElementById('newsletter-message').style.display = 'block';
+        document.getElementById('newsletter-email').value = '';
+      }
+    });
+  </script>
+</body>
+</html>

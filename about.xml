@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+  <details>
+    <title>
+    <name>Shop Website</name>
+    </title>
+    <images>
+      <image main="true">
+        <path>screenshots/index.png</path>
+      </image>
+      <image>
+        <path>screenshots/shop.png</path>
+      </image>
+      <image>
+        <path>screenshots/product1.png</path>
+      </image>
+      <image>
+        <path>screenshots/product2.png</path>
+      </image>
+      <image>
+        <path>screenshots/product3.png</path>
+      </image>
+      <image>
+        <path>screenshots/cart.png</path>
+      </image>
+      <image>
+        <path>screenshots/checkout.png</path>
+      </image>
+      <image>
+        <path>screenshots/contact.png</path>
+      </image>
+      <image>
+        <path>screenshots/profile.png</path>
+      </image>
+      <image>
+        <path>screenshots/terms.png</path>
+      </image>
+      <image>
+        <path>screenshots/thankyou.png</path>
+      </image>
+      <image>
+        <path>screenshots/paymenterror.png</path>
+      </image>
+    </images>
+    <technologies>
+      <technology>
+        <name>HTML5</name>
+        <icon class="fab fa-html5" color="#e34c26"/>
+      </technology>
+      <technology>
+        <name>JavaScript</name>
+        <icon class="fab fa-js" color="#f7df1e"/>
+      </technology>
+      <technology>
+        <name>CSS3</name>
+        <icon class="fab fa-css3" color="#264de4"/>
+      </technology>
+    </technologies>
+    <previewUrl>http://127.0.0.1:5500/index.html</previewUrl>
+    <published>2025-02-09</published>
+    <downloads>
+      <count>0</count>
+    </downloads>
+    <views>
+      <count>0</count>
+    </views>
+    <pageType>
+      <type>
+        <name>E-commerce</name>
+        <icon class="fas fa-shopping-cart" color="#ff9800"/>
+      </type>
+    </pageType>
+    <downloadInstructions>Click the button below to download the template. Follow the instructions in the README file to install and set up the page on your local machine.<download link="path/to/your/download/file.zip" label="Download Page"/></downloadInstructions>
+    <pageSize>
+      <browser>2MB</browser>
+      <disk>5MB</disk>
+    </pageSize>
+  </details>
+</template>

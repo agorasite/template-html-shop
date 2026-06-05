@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apple MacBook Air M3 — TechStore</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root{--bg-primary:#0a0e1a;--bg-secondary:#111827;--bg-card:#141d2e;--accent-blue:#0078ff;--accent-cyan:#00c8ff;--accent-hover:#005ecc;--border-subtle:#1e3d6b;--text-primary:#e8edf5;--text-muted:#8a9bbf;--price-color:#00c8ff}
+    body{background-color:var(--bg-primary);color:var(--text-primary)}
+    .navbar{background-color:var(--bg-secondary);border-bottom:2px solid var(--accent-blue);box-shadow:0 2px 20px rgba(0,120,255,.15)}
+    .navbar-brand img{height:80px}
+    .nav-link{color:var(--text-muted)!important;transition:color .2s}
+    .nav-link:hover,.nav-link.active{color:var(--accent-cyan)!important}
+    .dropdown-menu{background-color:var(--bg-secondary);border:1px solid var(--border-subtle)}
+    .dropdown-item{color:var(--text-muted)}
+    .dropdown-item:hover{background-color:rgba(0,120,255,.15);color:var(--accent-cyan)}
+    .breadcrumb{background:transparent;margin:0;padding:0}
+    .breadcrumb-item a{color:var(--accent-blue);text-decoration:none}
+    .breadcrumb-item a:hover{color:var(--accent-cyan)}
+    .breadcrumb-item.active{color:var(--text-muted)}
+    .breadcrumb-item+.breadcrumb-item::before{color:var(--border-subtle)}
+    .product-section{padding:40px 0 60px}
+    .gallery-main{border-radius:12px;overflow:hidden;background:var(--bg-card);border:1px solid var(--border-subtle);aspect-ratio:1/1}
+    .gallery-main img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+    .gallery-main:hover img{transform:scale(1.04)}
+    .gallery-thumbs{display:flex;gap:10px;margin-top:12px}
+    .gallery-thumbs img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:2px solid var(--border-subtle);cursor:pointer;transition:border-color .2s}
+    .gallery-thumbs img.active,.gallery-thumbs img:hover{border-color:var(--accent-blue)}
+    .category-pill{display:inline-block;font-size:.72rem;color:var(--accent-cyan);background:rgba(0,200,255,.1);border:1px solid rgba(0,200,255,.25);border-radius:20px;padding:2px 10px;margin-bottom:10px;letter-spacing:.3px}
+    .product-title{font-size:2rem;font-weight:700;letter-spacing:-.5px;line-height:1.2}
+    .stars{color:#f6ad10;font-size:.9rem}
+    .stars span{color:var(--text-muted);font-size:.82rem;margin-left:6px}
+    .price-wrap{display:flex;align-items:baseline;gap:12px;margin:18px 0}
+    .price-old{color:var(--text-muted);text-decoration:line-through;font-size:1.1rem}
+    .price-new{color:var(--price-color);font-size:2rem;font-weight:700}
+    .price-badge{background:#e53e3e;color:#fff;font-size:.78rem;font-weight:700;padding:3px 8px;border-radius:4px}
+    .divider{border-color:var(--border-subtle);margin:20px 0}
+    .feature-list{list-style:none;padding:0;margin:0 0 20px}
+    .feature-list li{padding:5px 0;color:var(--text-muted);font-size:.95rem}
+    .feature-list li i{color:var(--accent-blue);width:18px;margin-right:8px}
+    .stock-badge{font-size:.82rem;font-weight:600}
+    .in-stock{color:#48bb78}
+    .qty-wrap{display:flex;align-items:center;border:1px solid var(--border-subtle);border-radius:8px;overflow:hidden;width:fit-content}
+    .qty-btn{background:var(--bg-card);border:none;color:var(--text-primary);width:38px;height:42px;font-size:1.1rem;cursor:pointer;transition:background .2s}
+    .qty-btn:hover{background:var(--border-subtle)}
+    .qty-input{width:52px;height:42px;text-align:center;background:var(--bg-primary);border:none;border-left:1px solid var(--border-subtle);border-right:1px solid var(--border-subtle);color:var(--text-primary);font-size:1rem}
+    .qty-input:focus{outline:none}
+    .btn-primary{background-color:var(--accent-blue);border-color:var(--accent-blue);font-weight:600;padding:10px 28px;letter-spacing:.3px}
+    .btn-primary:hover{background-color:var(--accent-hover);border-color:var(--accent-hover);box-shadow:0 4px 15px rgba(0,120,255,.4)}
+    .btn-outline-secondary{border-color:var(--border-subtle);color:var(--text-muted)}
+    .btn-outline-secondary:hover{background-color:var(--bg-card);border-color:var(--accent-blue);color:var(--accent-cyan)}
+    .info-boxes{display:flex;gap:12px;margin-top:20px}
+    .info-box{flex:1;background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:10px;padding:12px;text-align:center;font-size:.8rem;color:var(--text-muted)}
+    .info-box i{display:block;font-size:1.3rem;color:var(--accent-blue);margin-bottom:5px}
+    .nav-tabs{border-bottom:1px solid var(--border-subtle);margin-top:50px}
+    .nav-tabs .nav-link{color:var(--text-muted)!important;border:none;border-bottom:2px solid transparent;background:transparent;padding:10px 20px;font-weight:600}
+    .nav-tabs .nav-link:hover{color:var(--text-primary)!important;border-bottom-color:var(--border-subtle)}
+    .nav-tabs .nav-link.active{color:var(--accent-cyan)!important;border-bottom:2px solid var(--accent-cyan);background:transparent}
+    .tab-content{background:var(--bg-card);border:1px solid var(--border-subtle);border-top:none;padding:30px;border-radius:0 0 12px 12px}
+    .spec-table th{color:var(--text-muted);font-weight:500;width:35%;border-color:var(--border-subtle);background:transparent}
+    .spec-table td{color:var(--text-primary);border-color:var(--border-subtle)}
+    .spec-table tr:last-child th,.spec-table tr:last-child td{border-bottom:none}
+    .review-card{background:var(--bg-primary);border:1px solid var(--border-subtle);border-radius:10px;padding:18px;margin-bottom:14px}
+    .reviewer-name{font-weight:600;color:var(--text-primary)}
+    .review-date{font-size:.8rem;color:var(--text-muted)}
+    .review-text{color:var(--text-muted);margin-top:8px;font-size:.92rem}
+    .card{background-color:var(--bg-card);border:1px solid var(--border-subtle);transition:transform .3s ease,box-shadow .3s ease}
+    .card:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,120,255,.25);border-color:var(--accent-blue)}
+    .card-img-top{height:180px;object-fit:cover}
+    .card-title{color:var(--text-primary)}
+    .section-title{font-weight:700;letter-spacing:-.5px}
+    .section-title::after{content:'';display:block;width:50px;height:3px;background:linear-gradient(90deg,var(--accent-blue),var(--accent-cyan));margin-top:8px;border-radius:2px}
+    footer{background-color:var(--bg-secondary);color:var(--text-muted);padding:20px 0;margin-top:60px;border-top:1px solid var(--border-subtle)}
+    footer h5{color:var(--text-primary);font-weight:600}
+    footer a{color:var(--accent-blue);text-decoration:none}
+    footer a:hover{color:var(--accent-cyan)}
+    footer hr{border-color:var(--border-subtle)}
+    .social-icons a{color:var(--text-muted);margin:0 10px;font-size:1.5rem;transition:color .2s}
+    .social-icons a:hover{color:var(--accent-cyan)}
+    .form-control{background-color:var(--bg-primary);border-color:var(--border-subtle);color:var(--text-primary)}
+    .form-control:focus{background-color:var(--bg-primary);border-color:var(--accent-blue);color:var(--text-primary);box-shadow:0 0 0 3px rgba(0,120,255,.2)}
+    .form-control::placeholder{color:var(--text-muted)}
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><img src="https://placehold.co/80x80" alt="TechStore"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-home"></i> Home</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active" href="#" data-bs-toggle="dropdown"><i class="fas fa-store"></i> Shop</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="shop.html">All Products</a></li>
+              <li><a class="dropdown-item" href="shop.html">Electronics</a></li>
+              <li><a class="dropdown-item" href="shop.html">Accessories</a></li>
+              <li><a class="dropdown-item" href="shop.html">Gaming</a></li>
+              <li><a class="dropdown-item" href="shop.html">Smart Home</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+          <li class="nav-item"><a class="nav-link" href="profile.html"><i class="fas fa-user"></i> Profile</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-3">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item"><a href="shop.html">Laptops</a></li>
+        <li class="breadcrumb-item active">Apple MacBook Air M3</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="container product-section">
+    <div class="row g-5">
+      <div class="col-lg-6">
+        <div class="gallery-main">
+          <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=600&fit=crop&crop=center" alt="MacBook Air M3" id="mainImgSrc">
+        </div>
+        <div class="gallery-thumbs">
+          <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=150&h=150&fit=crop&crop=center" class="active" onclick="changeImg(this,'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=600&fit=crop&crop=center')" alt="View 1">
+          <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=150&h=150&fit=crop&crop=center" onclick="changeImg(this,'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=600&fit=crop&crop=center')" alt="View 2">
+          <img src="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=150&h=150&fit=crop&crop=center" onclick="changeImg(this,'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=600&h=600&fit=crop&crop=center')" alt="View 3">
+          <img src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=150&h=150&fit=crop&crop=center" onclick="changeImg(this,'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=600&h=600&fit=crop&crop=center')" alt="View 4">
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <span class="category-pill"><i class="fas fa-laptop me-1"></i> Laptops</span>
+        <h1 class="product-title">Apple MacBook Air M3</h1>
+        <div class="stars mt-2">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <span>5.0 (2.876 αξιολογήσεις)</span>
+        </div>
+        <div class="price-wrap">
+          <span class="price-new">€1.299</span>
+        </div>
+        <p style="color:var(--text-muted);font-size:.95rem">Το MacBook Air με chip M3 επαναπροσδιορίζει τι σημαίνει laptop. Απίστευτη απόδοση, έως 18 ώρες αυτονομία μπαταρίας και σχεδιασμός που έχει γίνει εικόνα — σε βάρος μόλις 1.24kg.</p>
+        <ul class="feature-list">
+          <li><i class="fas fa-check-circle"></i> Apple M3 chip — 8-core CPU, 10-core GPU</li>
+          <li><i class="fas fa-check-circle"></i> 8GB Unified Memory (έως 24GB)</li>
+          <li><i class="fas fa-check-circle"></i> SSD 256GB (έως 2TB)</li>
+          <li><i class="fas fa-check-circle"></i> Οθόνη Liquid Retina 13.6" 2560×1664</li>
+          <li><i class="fas fa-check-circle"></i> Έως 18 ώρες αυτονομία</li>
+          <li><i class="fas fa-check-circle"></i> MagSafe 3, 2× Thunderbolt 4, Jack 3.5mm</li>
+        </ul>
+        <hr class="divider">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+          <div>
+            <div class="mb-1" style="font-size:.82rem;color:var(--text-muted)">Ποσότητα</div>
+            <div class="qty-wrap">
+              <button class="qty-btn" onclick="changeQty(-1)">−</button>
+              <input class="qty-input" type="number" id="qty" value="1" min="1" max="99">
+              <button class="qty-btn" onclick="changeQty(1)">+</button>
+            </div>
+          </div>
+          <div class="mt-3"><span class="stock-badge in-stock"><i class="fas fa-circle me-1" style="font-size:.6rem"></i>Σε απόθεμα</span></div>
+        </div>
+        <div class="d-flex gap-2 mt-3 flex-wrap">
+          <button class="btn btn-primary"><i class="fas fa-shopping-cart me-2"></i>Προσθήκη στο Καλάθι</button>
+          <button class="btn btn-outline-secondary"><i class="far fa-heart me-1"></i> Wishlist</button>
+        </div>
+        <div class="info-boxes">
+          <div class="info-box"><i class="fas fa-truck"></i>Δωρεάν<br>Αποστολή</div>
+          <div class="info-box"><i class="fas fa-undo"></i>30 ημέρες<br>Επιστροφή</div>
+          <div class="info-box"><i class="fas fa-shield-alt"></i>Εγγύηση<br>1 έτους</div>
+          <div class="info-box"><i class="fas fa-lock"></i>Ασφαλής<br>Πληρωμή</div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="nav nav-tabs" id="productTabs">
+      <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#desc">Περιγραφή</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#specs">Τεχνικά Χαρακτηριστικά</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#reviews">Αξιολογήσεις <span style="color:var(--text-muted)">(10)</span></button></li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="desc">
+        <p style="color:var(--text-muted)">Το MacBook Air M3 είναι το πιο δημοφιλές laptop στον κόσμο και με καλό λόγο. Ο chip Apple M3 βασισμένος σε αρχιτεκτονική 3nm προσφέρει έως 60% ταχύτερη απόδοση από το M1, διατηρώντας παράλληλα εξαιρετική ενεργειακή αποδοτικότητα.</p>
+        <p style="color:var(--text-muted)">Η οθόνη Liquid Retina 13.6" με brightness 500 nits και υποστήριξη True Tone κάνει κάθε εικόνα να φαίνεται εκπληκτική. Το πληκτρολόγιο Magic Keyboard με Touch ID και το εκτεταμένο trackpad Force Touch κάνουν την καθημερινή χρήση απόλαυση.</p>
+        <p style="color:var(--text-muted)">Για πρώτη φορά στο MacBook Air, υποστήριξη για 2 εξωτερικές οθόνες (με κλειστό καπάκι). Ιδανικό για developers, designers και επαγγελματίες που χρειάζονται φορητή απόδοση.</p>
+      </div>
+      <div class="tab-pane fade" id="specs">
+        <table class="table spec-table">
+          <tbody>
+            <tr><th>Chip</th><td>Apple M3 (3nm)</td></tr>
+            <tr><th>CPU</th><td>8-core (4 performance + 4 efficiency)</td></tr>
+            <tr><th>GPU</th><td>10-core</td></tr>
+            <tr><th>RAM</th><td>8GB Unified Memory (έως 24GB)</td></tr>
+            <tr><th>Αποθήκευση</th><td>256GB SSD (έως 2TB)</td></tr>
+            <tr><th>Οθόνη</th><td>13.6" Liquid Retina, 2560×1664, 224ppi</td></tr>
+            <tr><th>Φωτεινότητα</th><td>500 nits, True Tone, P3 wide color</td></tr>
+            <tr><th>Μπαταρία</th><td>Έως 18 ώρες αυτονομία</td></tr>
+            <tr><th>Θύρες</th><td>MagSafe 3, 2× Thunderbolt 4, Jack 3.5mm</td></tr>
+            <tr><th>Webcam</th><td>1080p FaceTime HD</td></tr>
+            <tr><th>Wi-Fi</th><td>Wi-Fi 6E (802.11ax)</td></tr>
+            <tr><th>Bluetooth</th><td>Bluetooth 5.3</td></tr>
+            <tr><th>Βάρος</th><td>1.24 kg</td></tr>
+            <tr><th>Χρώματα</th><td>Midnight, Starlight, Space Gray, Silver</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tab-pane fade" id="reviews">
+        <div class="review-card">
+          <div class="d-flex justify-content-between">
+            <div><span class="reviewer-name">Γιώργος Α.</span><div class="stars" style="font-size:.8rem"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div></div>
+            <span class="review-date">5 Ιουνίου 2025</span>
+          </div>
+          <p class="review-text">Το καλύτερο laptop που έχω αγοράσει. Η μπαταρία κρατάει εύκολα 2 μέρες με κανονική χρήση και η οθόνη είναι εκπληκτική για design work.</p>
+        </div>
+        <div class="review-card">
+          <div class="d-flex justify-content-between">
+            <div><span class="reviewer-name">Ελένη Σ.</span><div class="stars" style="font-size:.8rem"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div></div>
+            <span class="review-date">12 Μαΐου 2025</span>
+          </div>
+          <p class="review-text">Αναβάθμιση από παλιό MacBook Pro Intel και η διαφορά είναι τεράστια. Σιωπηλό, γρήγορο, ελαφρύ. Ό,τι χρειάζεται ένας developer.</p>
+        </div>
+        <div class="review-card">
+          <div class="d-flex justify-content-between">
+            <div><span class="reviewer-name">Δημήτρης Β.</span><div class="stars" style="font-size:.8rem"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div></div>
+            <span class="review-date">3 Απριλίου 2025</span>
+          </div>
+          <p class="review-text">Πολύ καλό laptop, μόνο παράπονο τα 8GB RAM που μπορούν να φανούν λίγα σε heavy multitasking. Για τους υπόλοιπους 10/10.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-5 pt-3">
+      <h3 class="section-title mb-4">Σχετικά Προϊόντα</h3>
+      <div class="row">
+        <div class="col-md-3 mb-4"><div class="card h-100"><img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=180&fit=crop&crop=center" class="card-img-top" alt="Sony WH-1000XM5"><div class="card-body"><span class="category-pill">Ακουστικά</span><h6 class="card-title mt-1">Sony WH-1000XM5</h6><p class="card-text" style="color:var(--price-color);font-weight:700">€319</p><a href="product1.html" class="btn btn-primary btn-sm w-100">Δες Προϊόν</a></div></div></div>
+        <div class="col-md-3 mb-4"><div class="card h-100"><img src="https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=180&fit=crop&crop=center" class="card-img-top" alt="Samsung Galaxy S24"><div class="card-body"><span class="category-pill">Smartphones</span><h6 class="card-title mt-1">Samsung Galaxy S24 Ultra</h6><p class="card-text" style="color:var(--price-color);font-weight:700">€1.199</p><a href="product3.html" class="btn btn-primary btn-sm w-100">Δες Προϊόν</a></div></div></div>
+        <div class="col-md-3 mb-4"><div class="card h-100"><img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=180&fit=crop&crop=center" class="card-img-top" alt="LG Monitor"><div class="card-body"><span class="category-pill">Monitors</span><h6 class="card-title mt-1">LG 27" 4K IPS Monitor</h6><p class="card-text" style="color:var(--price-color);font-weight:700">€449</p><a href="product4.html" class="btn btn-primary btn-sm w-100">Δες Προϊόν</a></div></div></div>
+        <div class="col-md-3 mb-4"><div class="card h-100"><img src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=180&fit=crop&crop=center" class="card-img-top" alt="Logitech Mouse"><div class="card-body"><span class="category-pill">Peripherals</span><h6 class="card-title mt-1">Logitech MX Master 3S</h6><p class="card-text" style="color:var(--price-color);font-weight:700">€89</p><a href="product6.html" class="btn btn-primary btn-sm w-100">Δες Προϊόν</a></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 mb-3"><h5>Quick Links</h5><ul class="list-unstyled"><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="contact.html">Contact</a></li><li><a href="cart.html">Cart</a></li><li><a href="terms.html">Terms & Conditions</a></li></ul></div>
+        <div class="col-md-3 mb-3"><h5>Follow Us</h5><div class="social-icons"><a href="#"><i class="fab fa-facebook"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-linkedin"></i></a></div></div>
+        <div class="col-md-3 mb-3"><h5>Contact Info</h5><p>Email: support@techstore.gr</p><p>Phone: +30 210 123 4567</p><p>Αθήνα, Ελλάδα</p></div>
+        <div class="col-md-3 mb-3"><h5>Newsletter</h5><form id="newsletter-form"><div class="input-group"><input type="email" id="newsletter-email" class="form-control" placeholder="Το email σου" required><button type="submit" class="btn btn-primary">OK</button></div><p id="newsletter-message" class="mt-2 text-success" style="display:none">Ευχαριστούμε!</p></form></div>
+      </div>
+      <hr><p class="mb-0">&copy; 2025 TechStore. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function changeImg(t,s){document.getElementById('mainImgSrc').src=s;document.querySelectorAll('.gallery-thumbs img').forEach(i=>i.classList.remove('active'));t.classList.add('active')}
+    function changeQty(d){const i=document.getElementById('qty');const v=parseInt(i.value)+d;if(v>=1&&v<=99)i.value=v}
+    document.getElementById('newsletter-form').addEventListener('submit',function(e){e.preventDefault();if(document.getElementById('newsletter-email').value){document.getElementById('newsletter-message').style.display='block';document.getElementById('newsletter-email').value=''}})
+  </script>
+</body>
+</html>

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Όροι Χρήσης — TechStore</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-primary:    #0a0e1a;
+      --bg-secondary:  #111827;
+      --bg-card:       #141d2e;
+      --accent-blue:   #0078ff;
+      --accent-cyan:   #00c8ff;
+      --border-subtle: #1e3d6b;
+      --text-primary:  #e8edf5;
+      --text-muted:    #8a9bbf;
+    }
+
+    body { background-color: var(--bg-primary); color: var(--text-primary); }
+
+    /* ── Navbar ── */
+    .navbar { background-color: var(--bg-secondary); border-bottom: 2px solid var(--accent-blue); box-shadow: 0 2px 20px rgba(0,120,255,.15); }
+    .navbar-brand img { height: 80px; }
+    .nav-link { color: var(--text-muted) !important; transition: color .2s; }
+    .nav-link:hover, .nav-link.active { color: var(--accent-cyan) !important; }
+    .dropdown-menu { background-color: var(--bg-secondary); border: 1px solid var(--border-subtle); }
+    .dropdown-item { color: var(--text-muted); }
+    .dropdown-item:hover { background-color: rgba(0,120,255,.15); color: var(--accent-cyan); }
+
+    .breadcrumb { background: transparent; margin: 0; padding: 0; }
+    .breadcrumb-item a { color: var(--accent-blue); text-decoration: none; }
+    .breadcrumb-item a:hover { color: var(--accent-cyan); }
+    .breadcrumb-item.active { color: var(--text-muted); }
+    .breadcrumb-item + .breadcrumb-item::before { color: var(--border-subtle); }
+
+    /* ── Hero banner ── */
+    .terms-hero {
+      background: linear-gradient(135deg, rgba(0,120,255,.12) 0%, rgba(0,200,255,.06) 100%);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 48px 0 40px;
+      text-align: center;
+    }
+    .terms-hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
+    .terms-hero h1 span { color: var(--accent-cyan); }
+    .terms-hero p { color: var(--text-muted); font-size: 0.88rem; }
+
+    /* ── Layout ── */
+    .toc-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px;
+      position: sticky;
+      top: 20px;
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+    }
+    .toc-card::-webkit-scrollbar { width: 4px; }
+    .toc-card::-webkit-scrollbar-track { background: transparent; }
+    .toc-card::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 4px; }
+    .toc-title {
+      font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .8px; color: var(--text-muted);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .toc-title i { color: var(--accent-blue); }
+    .toc-list { list-style: none; padding: 0; margin: 0; }
+    .toc-list li { margin-bottom: 4px; }
+    .toc-list a {
+      display: block; padding: 6px 10px; border-radius: 6px;
+      color: var(--text-muted); text-decoration: none; font-size: 0.84rem;
+      transition: all .15s; border-left: 2px solid transparent;
+    }
+    .toc-list a:hover { background: rgba(0,120,255,.08); color: var(--text-primary); border-left-color: var(--accent-blue); }
+    .toc-list a.active { background: rgba(0,120,255,.12); color: var(--accent-cyan); border-left-color: var(--accent-cyan); }
+
+    /* ── Content card ── */
+    .terms-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 36px 40px;
+    }
+
+    .terms-section { margin-bottom: 44px; scroll-margin-top: 24px; }
+    .terms-section:last-child { margin-bottom: 0; }
+
+    .section-header {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .section-num {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: rgba(0,120,255,.15);
+      border: 1px solid rgba(0,120,255,.35);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.82rem; font-weight: 800; color: var(--accent-cyan);
+    }
+    .section-title { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin: 0; }
+
+    .terms-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.8; margin-bottom: 12px; }
+    .terms-card p:last-child { margin-bottom: 0; }
+    .terms-card a { color: var(--accent-blue); text-decoration: none; }
+    .terms-card a:hover { color: var(--accent-cyan); text-decoration: underline; }
+
+    .terms-list {
+      list-style: none; padding: 0; margin: 0 0 12px;
+    }
+    .terms-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 6px 0;
+      color: var(--text-muted); font-size: 0.9rem; line-height: 1.7;
+      border-bottom: 1px solid rgba(30,61,107,.25);
+    }
+    .terms-list li:last-child { border-bottom: none; }
+    .terms-list li i { color: var(--accent-blue); margin-top: 4px; flex-shrink: 0; font-size: 0.75rem; }
+
+    .info-box {
+      background: rgba(0,120,255,.06);
+      border: 1px solid rgba(0,120,255,.2);
+      border-left: 3px solid var(--accent-blue);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin: 14px 0;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .info-box i { color: var(--accent-cyan); margin-right: 6px; }
+
+    .warn-box {
+      background: rgba(246,173,16,.06);
+      border: 1px solid rgba(246,173,16,.2);
+      border-left: 3px solid #f6ad10;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin: 14px 0;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .warn-box i { color: #f6ad10; margin-right: 6px; }
+
+    .last-updated {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,200,255,.07);
+      border: 1px solid rgba(0,200,255,.2);
+      border-radius: 20px;
+      font-size: 0.78rem; color: var(--accent-cyan);
+      padding: 4px 12px; margin-bottom: 28px;
+    }
+
+    /* ── Footer ── */
+    footer { background-color: var(--bg-secondary); color: var(--text-muted); padding: 20px 0; margin-top: 60px; border-top: 1px solid var(--border-subtle); }
+    footer h5 { color: var(--text-primary); font-weight: 600; }
+    footer a { color: var(--accent-blue); text-decoration: none; }
+    footer a:hover { color: var(--accent-cyan); }
+    footer hr { border-color: var(--border-subtle); }
+    .social-icons a { color: var(--text-muted); margin: 0 10px; font-size: 1.5rem; transition: color .2s; }
+    .social-icons a:hover { color: var(--accent-cyan); }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><img src="https://placehold.co/80x80" alt="TechStore"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-home"></i> Home</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><i class="fas fa-store"></i> Shop</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="shop.html">All Products</a></li>
+              <li><a class="dropdown-item" href="shop.html">Electronics</a></li>
+              <li><a class="dropdown-item" href="shop.html">Accessories</a></li>
+              <li><a class="dropdown-item" href="shop.html">Gaming</a></li>
+              <li><a class="dropdown-item" href="shop.html">Smart Home</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+          <li class="nav-item"><a class="nav-link" href="profile.html"><i class="fas fa-user"></i> Profile</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="terms-hero">
+    <div class="container">
+      <h1><i class="fas fa-file-contract me-3" style="color:var(--accent-blue)"></i>Όροι &amp; <span>Προϋποθέσεις</span></h1>
+      <p>Τελευταία ενημέρωση: 30 Ιανουαρίου 2025 &nbsp;·&nbsp; Διαβάστε προσεκτικά πριν χρησιμοποιήσετε τις υπηρεσίες μας.</p>
+    </div>
+  </div>
+
+  <div class="container mt-3 mb-2">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item active">Όροι &amp; Προϋποθέσεις</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="container mt-4 mb-5">
+    <div class="row g-4">
+
+      <!-- ── TOC Sidebar ── -->
+      <div class="col-lg-3 d-none d-lg-block">
+        <div class="toc-card">
+          <div class="toc-title"><i class="fas fa-list"></i>Περιεχόμενα</div>
+          <ul class="toc-list" id="toc">
+            <li><a href="#sec1">1. Εισαγωγή</a></li>
+            <li><a href="#sec2">2. Υποχρεώσεις Χρήστη</a></li>
+            <li><a href="#sec3">3. Παραγγελίες &amp; Πληρωμές</a></li>
+            <li><a href="#sec4">4. Αποστολή &amp; Παράδοση</a></li>
+            <li><a href="#sec5">5. Επιστροφές &amp; Επιστροφές Χρημάτων</a></li>
+            <li><a href="#sec6">6. Εγγύηση Προϊόντων</a></li>
+            <li><a href="#sec7">7. Προστασία Δεδομένων (GDPR)</a></li>
+            <li><a href="#sec8">8. Cookies</a></li>
+            <li><a href="#sec9">9. Πνευματικά Δικαιώματα</a></li>
+            <li><a href="#sec10">10. Περιορισμός Ευθύνης</a></li>
+            <li><a href="#sec11">11. Επικοινωνία</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── Content ── -->
+      <div class="col-lg-9">
+        <div class="terms-card">
+
+          <div class="last-updated"><i class="fas fa-clock"></i>Τελευταία ενημέρωση: 30 Ιανουαρίου 2025</div>
+
+          <!-- 1 -->
+          <div class="terms-section" id="sec1">
+            <div class="section-header">
+              <div class="section-num">1</div>
+              <h2 class="section-title">Εισαγωγή</h2>
+            </div>
+            <p>Καλώς ήρθατε στο <strong style="color:var(--text-primary)">TechStore</strong>! Οι παρόντες Όροι και Προϋποθέσεις διέπουν τη χρήση της ιστοσελίδας μας και των υπηρεσιών που παρέχουμε. Χρησιμοποιώντας την ιστοσελίδα μας, αποδέχεστε πλήρως αυτούς τους όρους.</p>
+            <p>Η TechStore λειτουργεί ως ηλεκτρονικό κατάστημα πώλησης ηλεκτρονικών συσκευών, υπολογιστών και αξεσουάρ τεχνολογίας στην Ελλάδα και την Κύπρο. Εάν διαφωνείτε με οποιονδήποτε από τους παρόντες όρους, σας παρακαλούμε να μη χρησιμοποιείτε τις υπηρεσίες μας.</p>
+            <div class="info-box"><i class="fas fa-info-circle"></i>Οι παρόντες όροι ενδέχεται να τροποποιούνται περιοδικά. Ενημερώνουμε πάντα την ημερομηνία στην κορυφή της σελίδας.</div>
+          </div>
+
+          <!-- 2 -->
+          <div class="terms-section" id="sec2">
+            <div class="section-header">
+              <div class="section-num">2</div>
+              <h2 class="section-title">Υποχρεώσεις Χρήστη</h2>
+            </div>
+            <p>Με την πρόσβαση στην ιστοσελίδα μας, αποδέχεστε ότι:</p>
+            <ul class="terms-list">
+              <li><i class="fas fa-circle"></i>Είστε τουλάχιστον 18 ετών ή έχετε τη συγκατάθεση γονέα/κηδεμόνα για αγορές.</li>
+              <li><i class="fas fa-circle"></i>Τα στοιχεία που παρέχετε (όνομα, διεύθυνση, email) είναι αληθή και ενημερωμένα.</li>
+              <li><i class="fas fa-circle"></i>Δεν θα χρησιμοποιήσετε την ιστοσελίδα για παράνομες δραστηριότητες ή για την αποστολή ανεπιθύμητης αλληλογραφίας (spam).</li>
+              <li><i class="fas fa-circle"></i>Δεν θα επιχειρήσετε να παραβιάσετε, αποκτήσετε μη εξουσιοδοτημένη πρόσβαση ή διαταράξετε τη λειτουργία της πλατφόρμας.</li>
+              <li><i class="fas fa-circle"></i>Θα διατηρείτε τα διαπιστευτήρια σύνδεσής σας (email, κωδικός) ασφαλή και εμπιστευτικά.</li>
+            </ul>
+            <div class="warn-box"><i class="fas fa-exclamation-triangle"></i>Παραβίαση αυτών των υποχρεώσεων μπορεί να οδηγήσει σε άμεση αναστολή ή οριστική διαγραφή του λογαριασμού σας.</div>
+          </div>
+
+          <!-- 3 -->
+          <div class="terms-section" id="sec3">
+            <div class="section-header">
+              <div class="section-num">3</div>
+              <h2 class="section-title">Παραγγελίες &amp; Πληρωμές</h2>
+            </div>
+            <ul class="terms-list">
+              <li><i class="fas fa-circle"></i>Όλες οι παραγγελίες υπόκεινται σε διαθεσιμότητα και επιβεβαίωση από την TechStore.</li>
+              <li><i class="fas fa-circle"></i>Οι τιμές εμφανίζονται σε ευρώ (€) και συμπεριλαμβάνουν ΦΠΑ 24%, εκτός αν αναφέρεται διαφορετικά.</li>
+              <li><i class="fas fa-circle"></i>Η TechStore διατηρεί το δικαίωμα να τροποποιεί τιμές χωρίς προηγούμενη ειδοποίηση.</li>
+              <li><i class="fas fa-circle"></i>Οι πληρωμές γίνονται αποδεκτές μέσω πιστωτικής/χρεωστικής κάρτας, PayPal, Apple Pay ή τραπεζικής κατάθεσης.</li>
+              <li><i class="fas fa-circle"></i>Η επεξεργασία παραγγελίας ξεκινά μόνο μετά την επιβεβαίωση της πληρωμής.</li>
+              <li><i class="fas fa-circle"></i>Σε περίπτωση λάθους τιμής λόγω τεχνικού σφάλματος, διατηρούμε το δικαίωμα ακύρωσης και επιστροφής χρημάτων.</li>
+            </ul>
+            <div class="info-box"><i class="fas fa-shield-alt"></i>Όλες οι συναλλαγές κάρτας προστατεύονται από κρυπτογράφηση SSL 256-bit και 3D Secure authentication.</div>
+          </div>
+
+          <!-- 4 -->
+          <div class="terms-section" id="sec4">
+            <div class="section-header">
+              <div class="section-num">4</div>
+              <h2 class="section-title">Αποστολή &amp; Παράδοση</h2>
+            </div>
+            <p>Η TechStore αποστέλλει παραγγελίες εντός Ελλάδας και Κύπρου. Οι χρόνοι παράδοσης είναι ενδεικτικοί και εξαρτώνται από τη μεταφορική εταιρεία:</p>
+            <ul class="terms-list">
+              <li><i class="fas fa-circle"></i><strong style="color:var(--text-primary)">Κανονική αποστολή:</strong> 2–4 εργάσιμες ημέρες — Δωρεάν για αγορές άνω των €50.</li>
+              <li><i class="fas fa-circle"></i><strong style="color:var(--text-primary)">Express αποστολή:</strong> Επόμενη εργάσιμη — €5,90.</li>
+              <li><i class="fas fa-circle"></i><strong style="color:var(--text-primary)">Same-Day Delivery:</strong> Ίδια ημέρα (παραγγελία έως 12:00) — €12,90.</li>
+              <li><i class="fas fa-circle"></i><strong style="color:var(--text-primary)">Παραλαβή από κατάστημα:</strong> Δωρεάν, Λεωφ. Κηφισίας 24, Αθήνα.</li>
+            </ul>
+            <p>Η TechStore δεν φέρει ευθύνη για καθυστερήσεις που οφείλονται σε ανωτέρα βία, φυσικές καταστροφές, απεργίες ή λάθη στη διεύθυνση αποστολής που δόθηκε από τον πελάτη.</p>
+          </div>
+
+          <!-- 5 -->
+          <div class="terms-section" id="sec5">
+            <div class="section-header">
+              <div class="section-num">5</div>
+              <h2 class="section-title">Επιστροφές &amp; Επιστροφές Χρημάτων</h2>
+            </div>
+            <p>Σύμφωνα με την ευρωπαϊκή νομοθεσία (Οδηγία 2011/83/ΕΕ), έχετε δικαίωμα υπαναχώρησης εντός <strong style="color:var(--text-primary)">14 ημερολογιακών ημερών</strong> από την παραλαβή του προϊόντος, χωρίς αιτιολόγηση.</p>
+            <ul class="terms-list">
+              <li><i class="fas fa-circle"></i>Το προϊόν πρέπει να επιστραφεί στην αρχική του συσκευασία, αχρησιμοποίητο και χωρίς ζημιές.</li>
+              <li><i class="fas fa-circle"></i>Τα έξοδα επιστροφής βαρύνουν τον πελάτη, εκτός αν το προϊόν είναι ελαττωματικό.</li>
+              <li><i class="fas fa-circle"></i>Η επιστροφή χρημάτων πραγματοποιείται εντός 14 ημερών από την παραλαβή του επιστρεφόμενου προϊόντος, στον ίδιο τρόπο πληρωμής.</li>
+              <li><i class="fas fa-circle"></i>Εξαιρούνται λογισμικά, κάρτες δεδομένων και προϊόντα που έχουν αποσφραγιστεί για υγιεινούς λόγους.</li>
+            </ul>
+            <div class="info-box"><i class="fas fa-envelope"></i>Για να ξεκινήσετε επιστροφή, επικοινωνήστε μαζί μας στο <a href="contact.html">returns@techstore.gr</a> με τον αριθμό παραγγελίας σας.</div>
+          </div>
+
+          <!-- 6 -->
+          <div class="terms-section" id="sec6">
+            <div class="section-header">
+              <div class="section-num">6</div>
+              <h2 class="section-title">Εγγύηση Προϊόντων</h2>
+            </div>
+            <p>Όλα τα προϊόντα που πωλούνται από την TechStore συνοδεύονται από την επίσημη εγγύηση του κατασκευαστή:</p>
+            <ul class="terms-list">
+              <li><i class="fas fa-circle"></i>Τουλάχιστον <strong style="color:var(--text-primary)">2 χρόνια εγγύηση</strong> σύμφωνα με την ευρωπαϊκή νομοθεσία για ελαττωματικά προϊόντα.</li>
+              <li><i class="fas fa-circle"></i>Η εγγύηση καλύπτει κατασκευαστικά ελαττώματα και δεν ισχύει για ζημιές από κακή χρήση, πτώση ή υγρά.</li>
+              <li><i class="fas fa-circle"></i>Για αξιώσεις εγγύησης, επικοινωνήστε μαζί μας ή απευθυνθείτε απευθείας στο επίσημο service center του κατασκευαστή.</li>
+            </ul>
+          </div>
+
+          <!-- 7 -->
+          <div class="terms-section" id="sec7">
+            <div class="section-header">
+              <div class="section-num">7</div>
+              <h2 class="section-title">Προστασία Δεδομένων (GDPR)</h2>
+            </div>
+            <p>Η TechStore συμμορφώνεται πλήρως με τον Γενικό Κανονισμό Προστασίας Δεδομένων (GDPR — Κανονισμός ΕΕ 2016/679).</p>
+            <ul class="terms-list">
+              <li><i class="fas fa-circle"></i>Συλλέγουμε μόνο τα απαραίτητα δεδομένα για την εκτέλεση της παραγγελίας σας (όνομα, διεύθυνση, email, τηλέφωνο).</li>
+              <li><i class="fas fa-circle"></i>Δεν πωλούμε ή μοιραζόμαστε τα προσωπικά σας δεδομένα με τρίτους για σκοπούς marketing χωρίς τη συγκατάθεσή σας.</li>
+              <li><i class="fas fa-circle"></i>Έχετε δικαίωμα πρόσβασης, διόρθωσης, διαγραφής («δικαίωμα λήθης») και φορητότητας των δεδομένων σας.</li>
+              <li><i class="fas fa-circle"></i>Για άσκηση των δικαιωμάτων σας, επικοινωνήστε στο <a href="mailto:privacy@techstore.gr">privacy@techstore.gr</a>.</li>
+            </ul>
+            <div class="info-box"><i class="fas fa-user-shield"></i>Υπεύθυνος Προστασίας Δεδομένων (DPO): dpo@techstore.gr</div>
+          </div>
+
+          <!-- 8 -->
+          <div class="terms-section" id="sec8">
+            <div class="section-header">
+              <div class="section-num">8</div>
+              <h2 class="section-title">Cookies</h2>
+            </div>
+            <p>Η ιστοσελίδα μας χρησιμοποιεί cookies για τη βελτίωση της εμπειρίας σας:</p>
+            <ul class="terms-list">
+              <li><i class="fas fa-circle"></i><strong style="color:var(--text-primary)">Απαραίτητα cookies:</strong> Για τη λειτουργία του καλαθιού αγορών και τη σύνδεση χρήστη.</li>
+              <li><i class="fas fa-circle"></i><strong style="color:var(--text-primary)">Αναλυτικά cookies:</strong> Google Analytics για στατιστικά επισκεψιμότητας (ανώνυμα).</li>
+              <li><i class="fas fa-circle"></i><strong style="color:var(--text-primary)">Marketing cookies:</strong> Για εξατομικευμένες διαφημίσεις (μόνο με τη συγκατάθεσή σας).</li>
+            </ul>
+            <p>Μπορείτε να διαχειριστείτε ή να απενεργοποιήσετε τα cookies μη απαραίτητα μέσω των ρυθμίσεων του browser σας ή του banner cookies που εμφανίζεται κατά την πρώτη επίσκεψη.</p>
+          </div>
+
+          <!-- 9 -->
+          <div class="terms-section" id="sec9">
+            <div class="section-header">
+              <div class="section-num">9</div>
+              <h2 class="section-title">Πνευματικά Δικαιώματα</h2>
+            </div>
+            <p>Όλο το περιεχόμενο της ιστοσελίδας (κείμενα, εικόνες, λογότυπα, γραφικά, κώδικας) αποτελεί πνευματική ιδιοκτησία της TechStore και προστατεύεται από την ελληνική και ευρωπαϊκή νομοθεσία.</p>
+            <ul class="terms-list">
+              <li><i class="fas fa-circle"></i>Απαγορεύεται η αναπαραγωγή, διανομή ή τροποποίηση οποιουδήποτε περιεχομένου χωρίς γραπτή άδεια.</li>
+              <li><i class="fas fa-circle"></i>Τα εμπορικά σήματα τρίτων κατασκευαστών (Apple, Sony, Samsung κ.λπ.) ανήκουν στους αντίστοιχους κατόχους τους.</li>
+            </ul>
+          </div>
+
+          <!-- 10 -->
+          <div class="terms-section" id="sec10">
+            <div class="section-header">
+              <div class="section-num">10</div>
+              <h2 class="section-title">Περιορισμός Ευθύνης</h2>
+            </div>
+            <p>Η TechStore δεν φέρει ευθύνη για:</p>
+            <ul class="terms-list">
+              <li><i class="fas fa-circle"></i>Έμμεσες ή αποθετικές ζημιές που προκύπτουν από τη χρήση ή αδυναμία χρήσης της ιστοσελίδας.</li>
+              <li><i class="fas fa-circle"></i>Προσωρινές διακοπές λειτουργίας λόγω συντήρησης ή τεχνικών προβλημάτων.</li>
+              <li><i class="fas fa-circle"></i>Ζημιές που οφείλονται σε ανωτέρα βία (φυσικές καταστροφές, κυβερνητικές παρεμβάσεις κ.λπ.).</li>
+            </ul>
+            <div class="warn-box"><i class="fas fa-balance-scale"></i>Εφαρμοστέο δίκαιο: Ελληνικό δίκαιο. Αρμόδια δικαστήρια: Δικαστήρια Αθηνών.</div>
+          </div>
+
+          <!-- 11 -->
+          <div class="terms-section" id="sec11">
+            <div class="section-header">
+              <div class="section-num">11</div>
+              <h2 class="section-title">Επικοινωνία</h2>
+            </div>
+            <p>Για οποιαδήποτε ερώτηση σχετικά με τους παρόντες Όρους, επικοινωνήστε μαζί μας:</p>
+            <ul class="terms-list">
+              <li><i class="fas fa-envelope"></i>Email: <a href="mailto:legal@techstore.gr">legal@techstore.gr</a></li>
+              <li><i class="fas fa-phone"></i>Τηλέφωνο: <a href="tel:+302101234567">+30 210 123 4567</a></li>
+              <li><i class="fas fa-map-marker-alt"></i>Διεύθυνση: Λεωφ. Κηφισίας 24, 115 26, Αθήνα</li>
+              <li><i class="fas fa-clock"></i>Ώρες εξυπηρέτησης: Δευ–Παρ 09:00–18:00</li>
+            </ul>
+            <div class="info-box"><i class="fas fa-comments"></i>Μπορείτε επίσης να χρησιμοποιήσετε τη <a href="contact.html">φόρμα επικοινωνίας</a> για γρηγορότερη απάντηση.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 mb-3"><h5>Quick Links</h5><ul class="list-unstyled"><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="contact.html">Contact</a></li><li><a href="cart.html">Cart</a></li><li><a href="terms.html">Terms &amp; Conditions</a></li></ul></div>
+        <div class="col-md-3 mb-3"><h5>Follow Us</h5><div class="social-icons"><a href="#"><i class="fab fa-facebook"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-linkedin"></i></a></div></div>
+        <div class="col-md-3 mb-3"><h5>Contact Info</h5><p>Email: support@techstore.gr</p><p>Phone: +30 210 123 4567</p><p>Αθήνα, Ελλάδα</p></div>
+        <div class="col-md-3 mb-3"><h5>Newsletter</h5><form id="newsletter-form"><div class="input-group"><input type="email" id="newsletter-email" class="form-control" placeholder="Το email σου" required><button type="submit" class="btn btn-primary">OK</button></div><p id="newsletter-message" class="mt-2 text-success" style="display:none">Ευχαριστούμε!</p></form></div>
+      </div>
+      <hr><p class="mb-0">&copy; 2025 TechStore. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ── Active TOC link on scroll ──────────────────────────────────────────────
+    const sections = document.querySelectorAll('.terms-section');
+    const tocLinks = document.querySelectorAll('.toc-list a');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          tocLinks.forEach(a => {
+            a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    // ── Newsletter ─────────────────────────────────────────────────────────────
+    document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (document.getElementById('newsletter-email').value) {
+        document.getElementById('newsletter-message').style.display = 'block';
+        document.getElementById('newsletter-email').value = '';
+      }
+    });
+  </script>
+</body>
+</html>

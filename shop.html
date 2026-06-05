@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop — TechStore</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #111827;
+      --bg-card: #141d2e;
+      --accent-blue: #0078ff;
+      --accent-cyan: #00c8ff;
+      --accent-hover: #005ecc;
+      --border-subtle: #1e3d6b;
+      --text-primary: #e8edf5;
+      --text-muted: #8a9bbf;
+      --price-color: #00c8ff;
+    }
+
+    body { background-color: var(--bg-primary); color: var(--text-primary); }
+
+    /* ── Navbar ── */
+    .navbar { background-color: var(--bg-secondary); border-bottom: 2px solid var(--accent-blue); box-shadow: 0 2px 20px rgba(0,120,255,.15); }
+    .navbar-brand img { height: 80px; }
+    .nav-link { color: var(--text-muted) !important; transition: color .2s; }
+    .nav-link:hover, .nav-link.active { color: var(--accent-cyan) !important; }
+    .dropdown-menu { background-color: var(--bg-secondary); border: 1px solid var(--border-subtle); }
+    .dropdown-item { color: var(--text-muted); }
+    .dropdown-item:hover { background-color: rgba(0,120,255,.15); color: var(--accent-cyan); }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb { background: transparent; margin: 0; padding: 0; }
+    .breadcrumb-item a { color: var(--accent-blue); text-decoration: none; }
+    .breadcrumb-item a:hover { color: var(--accent-cyan); }
+    .breadcrumb-item.active { color: var(--text-muted); }
+    .breadcrumb-item + .breadcrumb-item::before { color: var(--border-subtle); }
+
+    /* ── Sidebar ── */
+    .sidebar { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 24px; }
+    .sidebar h5 { color: var(--text-primary); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+    .sidebar hr { border-color: var(--border-subtle); margin: 18px 0; }
+
+    .cat-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      padding: 7px 0;
+      cursor: pointer;
+      transition: color .2s;
+      text-align: left;
+    }
+    .cat-btn:hover, .cat-btn.active { color: var(--accent-cyan); }
+    .cat-btn .count { font-size: 0.75rem; background: rgba(0,120,255,.15); color: var(--accent-blue); padding: 1px 7px; border-radius: 10px; }
+
+    .sub-cat { padding-left: 14px; border-left: 2px solid var(--border-subtle); margin: 4px 0 4px 4px; }
+    .sub-cat a { display: block; color: var(--text-muted); font-size: 0.85rem; padding: 4px 0; text-decoration: none; transition: color .2s; }
+    .sub-cat a:hover, .sub-cat a.active { color: var(--accent-cyan); }
+
+    /* Price Range */
+    .price-range-inputs { display: flex; gap: 8px; margin-top: 10px; }
+    .price-input { background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 6px; color: var(--text-primary); padding: 6px 10px; font-size: 0.85rem; width: 100%; }
+    .price-input:focus { outline: none; border-color: var(--accent-blue); }
+
+    /* ── Toolbar ── */
+    .shop-toolbar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .search-wrap { position: relative; flex: 1; min-width: 180px; }
+    .search-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; }
+    .search-input {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      color: var(--text-primary);
+      padding: 8px 12px 8px 34px;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+    .search-input:focus { outline: none; border-color: var(--accent-blue); }
+    .search-input::placeholder { color: var(--text-muted); }
+
+    .sort-select {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      color: var(--text-primary);
+      padding: 8px 12px;
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    .sort-select:focus { outline: none; border-color: var(--accent-blue); }
+
+    .results-count { color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; }
+
+    /* ── Product Cards ── */
+    .product-badge {
+      position: absolute; top: 10px; left: 10px;
+      font-size: 0.7rem; font-weight: 700; padding: 3px 9px;
+      border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .badge-new { background: var(--accent-blue); color: #fff; }
+    .badge-sale { background: #e53e3e; color: #fff; }
+    .badge-hot { background: #d97706; color: #fff; }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      height: 100%;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,120,255,.25); border-color: var(--accent-blue); }
+
+    .card-img-wrap { position: relative; overflow: hidden; }
+    .card-img-top { height: 200px; object-fit: cover; transition: transform 0.4s ease; }
+    .card:hover .card-img-top { transform: scale(1.04); }
+
+    .category-pill {
+      display: inline-block; font-size: 0.7rem; color: var(--accent-cyan);
+      background: rgba(0,200,255,.1); border: 1px solid rgba(0,200,255,.25);
+      border-radius: 20px; padding: 2px 9px; margin-bottom: 6px; letter-spacing: 0.3px;
+    }
+    .card-title { color: var(--text-primary); font-size: 0.95rem; font-weight: 600; }
+    .card-text { color: var(--text-muted); font-size: 0.83rem; }
+    .stars { color: #f6ad10; font-size: 0.78rem; }
+    .stars span { color: var(--text-muted); font-size: 0.75rem; margin-left: 3px; }
+    .price-old { color: var(--text-muted); text-decoration: line-through; font-size: 0.85rem; margin-right: 5px; }
+    .price-new { color: var(--price-color); font-size: 1.1rem; font-weight: 700; }
+
+    .btn-primary { background-color: var(--accent-blue); border-color: var(--accent-blue); font-weight: 600; }
+    .btn-primary:hover { background-color: var(--accent-hover); border-color: var(--accent-hover); box-shadow: 0 4px 15px rgba(0,120,255,.4); }
+
+    .btn-apply {
+      background: var(--accent-blue); border: none; color: #fff;
+      border-radius: 6px; padding: 7px 16px; font-size: 0.85rem;
+      font-weight: 600; cursor: pointer; width: 100%; margin-top: 10px;
+      transition: background .2s;
+    }
+    .btn-apply:hover { background: var(--accent-hover); }
+
+    /* ── Active filter pills ── */
+    .active-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .filter-pill {
+      background: rgba(0,120,255,.15); border: 1px solid rgba(0,120,255,.3);
+      color: var(--accent-cyan); font-size: 0.78rem; padding: 3px 10px;
+      border-radius: 20px; display: flex; align-items: center; gap: 6px;
+    }
+    .filter-pill button { background: none; border: none; color: var(--accent-cyan); padding: 0; cursor: pointer; font-size: 0.7rem; line-height: 1; }
+
+    /* ── No results ── */
+    .no-results { text-align: center; padding: 60px 0; color: var(--text-muted); display: none; }
+    .no-results i { font-size: 3rem; margin-bottom: 16px; color: var(--border-subtle); }
+
+    /* ── Footer ── */
+    footer { background-color: var(--bg-secondary); color: var(--text-muted); padding: 20px 0; margin-top: 60px; border-top: 1px solid var(--border-subtle); }
+    footer h5 { color: var(--text-primary); font-weight: 600; }
+    footer a { color: var(--accent-blue); text-decoration: none; }
+    footer a:hover { color: var(--accent-cyan); }
+    footer hr { border-color: var(--border-subtle); }
+    .social-icons a { color: var(--text-muted); margin: 0 10px; font-size: 1.5rem; transition: color .2s; }
+    .social-icons a:hover { color: var(--accent-cyan); }
+    .form-control { background-color: var(--bg-primary); border-color: var(--border-subtle); color: var(--text-primary); }
+    .form-control:focus { background-color: var(--bg-primary); border-color: var(--accent-blue); color: var(--text-primary); box-shadow: 0 0 0 3px rgba(0,120,255,.2); }
+    .form-control::placeholder { color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="https://placehold.co/80x80" alt="TechStore">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-home"></i> Home</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle active" href="#" data-bs-toggle="dropdown"><i class="fas fa-store"></i> Shop</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="shop.html">All Products</a></li>
+              <li><a class="dropdown-item" href="shop.html">Electronics</a></li>
+              <li><a class="dropdown-item" href="shop.html">Accessories</a></li>
+              <li><a class="dropdown-item" href="shop.html">Gaming</a></li>
+              <li><a class="dropdown-item" href="shop.html">Smart Home</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+          <li class="nav-item"><a class="nav-link" href="profile.html"><i class="fas fa-user"></i> Profile</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-3 mb-2">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item active">Shop</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="container mt-3 mb-5">
+    <div class="row g-4">
+
+      <!-- ── Sidebar ── -->
+      <div class="col-lg-3">
+        <div class="sidebar">
+
+          <h5><i class="fas fa-list me-2" style="color:var(--accent-blue)"></i>Κατηγορίες</h5>
+          <button class="cat-btn active" onclick="filterCategory('all', this)">
+            Όλα τα Προϊόντα <span class="count">6</span>
+          </button>
+          <button class="cat-btn" onclick="filterCategory('Ακουστικά', this)">
+            Ακουστικά <span class="count">1</span>
+          </button>
+          <div class="sub-cat" id="subAkoustika" style="display:none">
+            <a href="#" onclick="filterCategory('Ακουστικά',null);return false">Wireless</a>
+            <a href="#" onclick="filterCategory('Ακουστικά',null);return false">Noise Cancelling</a>
+          </div>
+          <button class="cat-btn" onclick="filterCategory('Laptops', this)">
+            Laptops <span class="count">1</span>
+          </button>
+          <button class="cat-btn" onclick="filterCategory('Smartphones', this)">
+            Smartphones <span class="count">1</span>
+          </button>
+          <button class="cat-btn" onclick="filterCategory('Monitors', this)">
+            Monitors <span class="count">1</span>
+          </button>
+          <button class="cat-btn" onclick="filterCategory('Gaming', this)">
+            Gaming <span class="count">1</span>
+          </button>
+          <button class="cat-btn" onclick="filterCategory('Peripherals', this)">
+            Peripherals <span class="count">1</span>
+          </button>
+
+          <hr>
+          <h5><i class="fas fa-tag me-2" style="color:var(--accent-blue)"></i>Τιμή</h5>
+          <div class="price-range-inputs">
+            <input class="price-input" type="number" id="minPrice" placeholder="Από €" min="0">
+            <input class="price-input" type="number" id="maxPrice" placeholder="Έως €" min="0">
+          </div>
+          <button class="btn-apply" onclick="applyPriceFilter()">Εφαρμογή</button>
+
+          <hr>
+          <h5><i class="fas fa-star me-2" style="color:var(--accent-blue)"></i>Αξιολόγηση</h5>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label style="color:var(--text-muted);font-size:.88rem;cursor:pointer">
+              <input type="radio" name="rating" value="0" checked onchange="filterRating(0)" style="accent-color:var(--accent-blue)"> Όλα
+            </label>
+            <label style="color:var(--text-muted);font-size:.88rem;cursor:pointer">
+              <input type="radio" name="rating" value="4.5" onchange="filterRating(4.5)" style="accent-color:var(--accent-blue)">
+              <span style="color:#f6ad10">★★★★★</span> 4.5+
+            </label>
+            <label style="color:var(--text-muted);font-size:.88rem;cursor:pointer">
+              <input type="radio" name="rating" value="4" onchange="filterRating(4)" style="accent-color:var(--accent-blue)">
+              <span style="color:#f6ad10">★★★★</span> 4.0+
+            </label>
+          </div>
+
+          <hr>
+          <button class="btn-apply" style="background:rgba(255,255,255,.06);color:var(--text-muted)" onclick="resetAll()">
+            <i class="fas fa-times me-1"></i> Καθαρισμός φίλτρων
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Products ── -->
+      <div class="col-lg-9">
+
+        <!-- Toolbar -->
+        <div class="shop-toolbar">
+          <div class="search-wrap">
+            <i class="fas fa-search"></i>
+            <input class="search-input" type="text" id="searchInput" placeholder="Αναζήτηση προϊόντων..." oninput="applyFilters()">
+          </div>
+          <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+            <option value="default">Ταξινόμηση: Προτεινόμενα</option>
+            <option value="price-asc">Τιμή: Χαμηλή → Υψηλή</option>
+            <option value="price-desc">Τιμή: Υψηλή → Χαμηλή</option>
+            <option value="rating">Αξιολόγηση</option>
+            <option value="name">Αλφαβητικά</option>
+          </select>
+          <span class="results-count" id="resultsCount">6 προϊόντα</span>
+        </div>
+
+        <!-- Active filters -->
+        <div class="active-filters" id="activeFilters"></div>
+
+        <!-- Grid -->
+        <div class="row g-4" id="productsGrid">
+
+          <div class="col-md-4 product-card"
+               data-category="Ακουστικά" data-price="319" data-rating="4.6" data-name="Sony WH-1000XM5">
+            <div class="card">
+              <div class="card-img-wrap">
+                <span class="product-badge badge-new">New</span>
+                <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&h=200&fit=crop&crop=center" class="card-img-top" alt="Sony WH-1000XM5">
+              </div>
+              <div class="card-body d-flex flex-column">
+                <span class="category-pill">Ακουστικά</span>
+                <h5 class="card-title">Sony WH-1000XM5</h5>
+                <p class="card-text flex-grow-1">Ασύρματα ακουστικά με industry-leading noise cancellation, 30ωρη μπαταρία και Hi-Res Audio.</p>
+                <div class="stars mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><span>(1.243)</span></div>
+                <p class="mb-3"><span class="price-old">€399</span><span class="price-new">€319</span></p>
+                <a href="product1.html" class="btn btn-primary btn-sm">Δες Λεπτομέρειες</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 product-card"
+               data-category="Laptops" data-price="1299" data-rating="5.0" data-name="Apple MacBook Air M3">
+            <div class="card">
+              <div class="card-img-wrap">
+                <span class="product-badge badge-hot">Hot</span>
+                <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=200&fit=crop&crop=center" class="card-img-top" alt="Apple MacBook Air M3">
+              </div>
+              <div class="card-body d-flex flex-column">
+                <span class="category-pill">Laptops</span>
+                <h5 class="card-title">Apple MacBook Air M3</h5>
+                <p class="card-text flex-grow-1">Chip Apple M3, 8GB RAM, 256GB SSD, οθόνη Liquid Retina 13.6". Η τελειότερη φορητότητα.</p>
+                <div class="stars mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(2.876)</span></div>
+                <p class="mb-3"><span class="price-new">€1.299</span></p>
+                <a href="product2.html" class="btn btn-primary btn-sm">Δες Λεπτομέρειες</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 product-card"
+               data-category="Smartphones" data-price="1199" data-rating="4.7" data-name="Samsung Galaxy S24 Ultra">
+            <div class="card">
+              <div class="card-img-wrap">
+                <span class="product-badge badge-new">New</span>
+                <img src="https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=200&fit=crop&crop=center" class="card-img-top" alt="Samsung Galaxy S24 Ultra">
+              </div>
+              <div class="card-body d-flex flex-column">
+                <span class="category-pill">Smartphones</span>
+                <h5 class="card-title">Samsung Galaxy S24 Ultra</h5>
+                <p class="card-text flex-grow-1">Snapdragon 8 Gen 3, κάμερα 200MP, S Pen, οθόνη 6.8" Dynamic AMOLED 2X.</p>
+                <div class="stars mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><span>(3.512)</span></div>
+                <p class="mb-3"><span class="price-old">€1.349</span><span class="price-new">€1.199</span></p>
+                <a href="product3.html" class="btn btn-primary btn-sm">Δες Λεπτομέρειες</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 product-card"
+               data-category="Monitors" data-price="449" data-rating="4.1" data-name="LG 27 4K IPS Monitor">
+            <div class="card">
+              <div class="card-img-wrap">
+                <span class="product-badge badge-sale">-20%</span>
+                <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=200&fit=crop&crop=center" class="card-img-top" alt="LG 27 4K Monitor">
+              </div>
+              <div class="card-body d-flex flex-column">
+                <span class="category-pill">Monitors</span>
+                <h5 class="card-title">LG 27" 4K IPS Monitor</h5>
+                <p class="card-text flex-grow-1">Panel IPS 3840×2160, HDR10, 99% sRGB, USB-C 60W. Ιδανικό για επαγγελματίες.</p>
+                <div class="stars mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><span>(689)</span></div>
+                <p class="mb-3"><span class="price-old">€559</span><span class="price-new">€449</span></p>
+                <a href="product4.html" class="btn btn-primary btn-sm">Δες Λεπτομέρειες</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 product-card"
+               data-category="Gaming" data-price="449" data-rating="5.0" data-name="PlayStation 5 Slim">
+            <div class="card">
+              <div class="card-img-wrap">
+                <span class="product-badge badge-hot">Hot</span>
+                <img src="https://images.unsplash.com/photo-1486401899868-0e435ed85128?w=400&h=200&fit=crop&crop=center" class="card-img-top" alt="PlayStation 5 Slim">
+              </div>
+              <div class="card-body d-flex flex-column">
+                <span class="category-pill">Gaming</span>
+                <h5 class="card-title">PlayStation 5 Slim</h5>
+                <p class="card-text flex-grow-1">CPU AMD Zen 2 3.5GHz, GPU 10.28 TFLOPs, SSD 1TB NVMe. 4K gaming με 120fps.</p>
+                <div class="stars mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(4.201)</span></div>
+                <p class="mb-3"><span class="price-new">€449</span></p>
+                <a href="product5.html" class="btn btn-primary btn-sm">Δες Λεπτομέρειες</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 product-card"
+               data-category="Peripherals" data-price="89" data-rating="4.6" data-name="Logitech MX Master 3S">
+            <div class="card">
+              <div class="card-img-wrap">
+                <img src="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=200&fit=crop&crop=center" class="card-img-top" alt="Logitech MX Master 3S">
+              </div>
+              <div class="card-body d-flex flex-column">
+                <span class="category-pill">Peripherals</span>
+                <h5 class="card-title">Logitech MX Master 3S</h5>
+                <p class="card-text flex-grow-1">8000 DPI, MagSpeed scroll, σύνδεση σε 3 συσκευές. Το κορυφαίο productivity mouse.</p>
+                <div class="stars mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><span>(921)</span></div>
+                <p class="mb-3"><span class="price-old">€109</span><span class="price-new">€89</span></p>
+                <a href="product6.html" class="btn btn-primary btn-sm">Δες Λεπτομέρειες</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- No results -->
+        <div class="no-results" id="noResults">
+          <i class="fas fa-search-minus d-block"></i>
+          <p style="font-size:1.1rem;color:var(--text-primary)">Δεν βρέθηκαν προϊόντα</p>
+          <p>Δοκίμασε διαφορετικά φίλτρα ή αναζήτηση.</p>
+          <button class="btn btn-primary mt-2" onclick="resetAll()">Καθαρισμός φίλτρων</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 mb-3"><h5>Quick Links</h5><ul class="list-unstyled"><li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="contact.html">Contact</a></li><li><a href="cart.html">Cart</a></li><li><a href="terms.html">Terms & Conditions</a></li></ul></div>
+        <div class="col-md-3 mb-3"><h5>Follow Us</h5><div class="social-icons"><a href="#"><i class="fab fa-facebook"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-linkedin"></i></a></div></div>
+        <div class="col-md-3 mb-3"><h5>Contact Info</h5><p>Email: support@techstore.gr</p><p>Phone: +30 210 123 4567</p><p>Αθήνα, Ελλάδα</p></div>
+        <div class="col-md-3 mb-3"><h5>Newsletter</h5><form id="newsletter-form"><div class="input-group"><input type="email" id="newsletter-email" class="form-control" placeholder="Το email σου" required><button type="submit" class="btn btn-primary">OK</button></div><p id="newsletter-message" class="mt-2 text-success" style="display:none">Ευχαριστούμε!</p></form></div>
+      </div>
+      <hr><p class="mb-0">&copy; 2025 TechStore. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let activeCategory = 'all';
+    let activePriceMin = 0;
+    let activePriceMax = Infinity;
+    let activeRating = 0;
+
+    function filterCategory(cat, btn) {
+      activeCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      applyFilters();
+    }
+
+    function applyPriceFilter() {
+      const min = parseFloat(document.getElementById('minPrice').value) || 0;
+      const max = parseFloat(document.getElementById('maxPrice').value) || Infinity;
+      activePriceMin = min;
+      activePriceMax = max;
+      applyFilters();
+    }
+
+    function filterRating(val) {
+      activeRating = parseFloat(val);
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const sort = document.getElementById('sortSelect').value;
+      const cards = Array.from(document.querySelectorAll('.product-card'));
+      let visible = 0;
+
+      cards.forEach(card => {
+        const cat = card.dataset.category;
+        const price = parseFloat(card.dataset.price);
+        const rating = parseFloat(card.dataset.rating);
+        const name = card.dataset.name.toLowerCase();
+
+        const catMatch = activeCategory === 'all' || cat === activeCategory;
+        const priceMatch = price >= activePriceMin && price <= activePriceMax;
+        const ratingMatch = rating >= activeRating;
+        const searchMatch = name.includes(query);
+
+        if (catMatch && priceMatch && ratingMatch && searchMatch) {
+          card.style.display = '';
+          visible++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Sort visible cards
+      const grid = document.getElementById('productsGrid');
+      const visibleCards = cards.filter(c => c.style.display !== 'none');
+      visibleCards.sort((a, b) => {
+        if (sort === 'price-asc') return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+        if (sort === 'price-desc') return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+        if (sort === 'rating') return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+        if (sort === 'name') return a.dataset.name.localeCompare(b.dataset.name);
+        return 0;
+      });
+      visibleCards.forEach(c => grid.appendChild(c));
+
+      document.getElementById('resultsCount').textContent = visible + ' προϊόντα';
+      document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+      updateActivePills();
+    }
+
+    function updateActivePills() {
+      const container = document.getElementById('activeFilters');
+      container.innerHTML = '';
+      if (activeCategory !== 'all') addPill(activeCategory, () => filterCategory('all', document.querySelector('.cat-btn')));
+      if (activePriceMin > 0 || activePriceMax < Infinity) {
+        const label = '€' + activePriceMin + (activePriceMax < Infinity ? ' – €' + activePriceMax : '+');
+        addPill(label, () => { activePriceMin = 0; activePriceMax = Infinity; document.getElementById('minPrice').value = ''; document.getElementById('maxPrice').value = ''; applyFilters(); });
+      }
+      if (activeRating > 0) addPill('★ ' + activeRating + '+', () => { activeRating = 0; document.querySelector('input[name=rating][value="0"]').checked = true; applyFilters(); });
+
+      function addPill(label, onRemove) {
+        const p = document.createElement('span');
+        p.className = 'filter-pill';
+        p.innerHTML = label + ' <button onclick="void(0)" title="Αφαίρεση">✕</button>';
+        p.querySelector('button').addEventListener('click', onRemove);
+        container.appendChild(p);
+      }
+    }
+
+    function resetAll() {
+      activeCategory = 'all';
+      activePriceMin = 0;
+      activePriceMax = Infinity;
+      activeRating = 0;
+      document.getElementById('searchInput').value = '';
+      document.getElementById('minPrice').value = '';
+      document.getElementById('maxPrice').value = '';
+      document.querySelector('input[name=rating][value="0"]').checked = true;
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.cat-btn').classList.add('active');
+      applyFilters();
+    }
+
+    document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (document.getElementById('newsletter-email').value) {
+        document.getElementById('newsletter-message').style.display = 'block';
+        document.getElementById('newsletter-email').value = '';
+      }
+    });
+  </script>
+</body>
+</html>
