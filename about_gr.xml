@@ -6,7 +6,7 @@
     </title>
     <images>
       <image main="true">
-        <path>screenshots/index.png</path>
+        <path>screenshots/home.png</path>
       </image>
       <image>
         <path>screenshots/shop.png</path>
