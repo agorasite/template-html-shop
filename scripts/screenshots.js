@@ -17,7 +17,7 @@ const WAIT_MS   = 1500;                     // ms to wait after each navigation
 const MODE = "multipage";
 
 const PAGES = [
-  "/index.html",
+  "/home.html",
   "/shop.html",
   "/product1.html",
   "/product2.html",
@@ -31,7 +31,7 @@ const PAGES = [
   "/paymenterror.html",
 ];
 
-const SINGLE_PAGE_FILE = "/index.html";
+const SINGLE_PAGE_FILE = "/home.html";
 
 // ─── PER-PAGE EXTRA SHOTS ─────────────────────────────────────────────────────
 // For pages that have hidden states (multi-step forms, tabs, modals) we define
