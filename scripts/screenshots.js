@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 
 // ─── CONFIGURATION ────────────────────────────────────────────────────────────
 const BASE_URL  = "http://127.0.0.1:5501";
-const ZOOM      = 0.75;                     // 1 = 100%, 0.75 = 75% zoom out
+const ZOOM      = 1;
 const VIEWPORT  = { width: 1440, height: 900 };
 const WAIT_MS   = 1500;                     // ms to wait after each navigation
 
